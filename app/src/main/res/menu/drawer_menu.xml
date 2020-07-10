@@ -15,13 +15,13 @@
     <item android:title="Group2">
         <menu>
             <item
-                android:icon="@drawable/ic_home_black_24dp"
-                android:title="Home"
-                android:id="@+id/home_menu1"/>
+                android:icon="@drawable/ic_person_black_24dp"
+                android:title="Login"
+                android:id="@+id/login_menu"/>
             <item
-                android:icon="@drawable/ic_hot_tub_black_24dp"
-                android:title="Another Menu"
-                android:id="@+id/another_menu1"/>
+                android:icon="@drawable/ic_person_add_black_24dp"
+                android:title="Register"
+                android:id="@+id/register_menu"/>
         </menu>
     </item>
 </menu>
