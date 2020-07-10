@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Group1">
+        <menu>
+            <item
+                android:icon="@drawable/ic_home_black_24dp"
+                android:title="Home"
+                android:id="@+id/home_menu"/>
+            <item
+                android:icon="@drawable/ic_hot_tub_black_24dp"
+                android:title="Another Menu"
+                android:id="@+id/another_menu" />
+        </menu>
+    </item>
+    <item android:title="Group2">
+        <menu>
+            <item
+                android:icon="@drawable/ic_home_black_24dp"
+                android:title="Home"
+                android:id="@+id/home_menu1"/>
+            <item
+                android:icon="@drawable/ic_hot_tub_black_24dp"
+                android:title="Another Menu"
+                android:id="@+id/another_menu1"/>
+        </menu>
+    </item>
+</menu>
