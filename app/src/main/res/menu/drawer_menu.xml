@@ -20,8 +20,12 @@
                 android:id="@+id/login_menu"/>
             <item
                 android:icon="@drawable/ic_person_add_black_24dp"
-                android:title="Register"
-                android:id="@+id/register_menu"/>
+                android:title="Update Profile"
+                android:id="@+id/profile_menu"/>
+            <item
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Log Out"
+                android:id="@+id/logout_menu"/>
         </menu>
     </item>
 </menu>

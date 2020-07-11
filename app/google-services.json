@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "987211006959",
+    "firebase_url": "https://bhadoriashop.firebaseio.com",
+    "project_id": "bhadoriashop",
+    "storage_bucket": "bhadoriashop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987211006959:android:422aa54e65a13a775a2c1a",
+        "android_client_info": {
+          "package_name": "com.grocery.bhadoriashop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "987211006959-ek8noucdqga0d86c1u92hulun03qsagt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7SODPWDzbifycd7lx7QPo2asTvHRqQpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987211006959-ek8noucdqga0d86c1u92hulun03qsagt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
