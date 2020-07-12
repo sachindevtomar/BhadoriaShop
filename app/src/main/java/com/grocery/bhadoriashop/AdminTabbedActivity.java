@@ -1,13 +1,19 @@
 package com.grocery.bhadoriashop;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.grocery.bhadoriashop.Fragments.AddProductFragment;
@@ -15,7 +21,9 @@ import com.grocery.bhadoriashop.Fragments.ProductListFragment;
 
 public class AdminTabbedActivity extends AppCompatActivity {
 
-
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private static final int MY_EXTERNAL_READ_STORAGE_REQUEST_CODE = 200;
+    private static final int MY_EXTERNAL_WRITE_STORAGE_REQUEST_CODE = 300;
     private final String LOG_TAG = AdminTabbedActivity.class.getSimpleName();
 
     // Titles of the individual pages (displayed in tabs)
@@ -53,8 +61,17 @@ public class AdminTabbedActivity extends AppCompatActivity {
         // and when the ViewPager switches to a new page, the corresponding tab is selected)
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
-    }
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_EXTERNAL_READ_STORAGE_REQUEST_CODE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_EXTERNAL_WRITE_STORAGE_REQUEST_CODE);
+        }
+    }
 
     /* PagerAdapter for supplying the ViewPager with the pages (fragments) to display. */
     public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -78,6 +95,37 @@ public class AdminTabbedActivity extends AppCompatActivity {
             return PAGE_TITLES[position];
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+        else if(requestCode == MY_EXTERNAL_READ_STORAGE_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "External Storage read permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "External Storage read permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+        else if(requestCode == MY_EXTERNAL_WRITE_STORAGE_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "External Storage write permission granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "External Storage writepermission denied", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
 

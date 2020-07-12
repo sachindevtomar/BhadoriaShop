@@ -15,8 +15,21 @@ public class Product {
     public double SellingPricePerUnit;
     public String ProductImageURL;
 
-    public Product(String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String MeasureIn, double TotalWeight,
-                   String TotalWeightIn, double MRPPricePerUnit, double SellingPricePerUnit, String ProductImageURL){
+//    public Product(String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String MeasureIn, double TotalWeight, String TotalWeightIn, double MRPPricePerUnit, double SellingPricePerUnit, String ProductImageURL){
+//        this.ProductName = ProductName;
+//        this.ProductCategory = ProductCategory;
+//        this.ProductSubCategory = ProductSubCategory;
+//        this.ProductBrand = ProductBrand;
+//        this.MeasureIn = MeasureIn;
+//        this.TotalWeight = TotalWeight;
+//        this.TotalWeightIn = TotalWeightIn;
+//        this.MRPPricePerUnit = MRPPricePerUnit;
+//        this.SellingPricePerUnit = SellingPricePerUnit;
+//        this.ProductImageURL = ProductImageURL;
+//    }
+
+
+    public Product(String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String MeasureIn, double TotalWeight, String TotalWeightIn, int ItemCount, double ItemWeight, String ItemWeightIn, double MRPPricePerUnit, double SellingPricePerUnit, String ProductImageURL){
         this.ProductName = ProductName;
         this.ProductCategory = ProductCategory;
         this.ProductSubCategory = ProductSubCategory;
@@ -24,19 +37,6 @@ public class Product {
         this.MeasureIn = MeasureIn;
         this.TotalWeight = TotalWeight;
         this.TotalWeightIn = TotalWeightIn;
-        this.MRPPricePerUnit = MRPPricePerUnit;
-        this.SellingPricePerUnit = SellingPricePerUnit;
-        this.ProductImageURL = ProductImageURL;
-    }
-
-
-    public Product(String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String MeasureIn, int ItemCount, double ItemWeight,
-                   String ItemWeightIn, double MRPPricePerUnit, double SellingPricePerUnit, String ProductImageURL){
-        this.ProductName = ProductName;
-        this.ProductCategory = ProductCategory;
-        this.ProductSubCategory = ProductSubCategory;
-        this.ProductBrand = ProductBrand;
-        this.MeasureIn = MeasureIn;
         this.ItemCount = ItemCount;
         this.ItemWeight = ItemWeight;
         this.ItemWeightIn = ItemWeightIn;
