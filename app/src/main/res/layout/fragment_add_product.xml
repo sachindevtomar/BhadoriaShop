@@ -124,24 +124,15 @@
                     android:id="@+id/count_measure_radiobtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="Count"/>
                 <RadioButton
                     android:id="@+id/wtltr_measure_radiobtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wt/Ltr"/>
                 <RadioButton
                     android:id="@+id/na_measure_radiobtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NA"/>
@@ -163,6 +154,7 @@
                 android:id="@+id/total_weight_edittext"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:layout_marginLeft="13dp"/>
             <Spinner
                 android:id="@+id/total_weight_category_spinner"
@@ -179,11 +171,13 @@
                 android:id="@+id/count_product_edittext"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:hint="Item Count"/>
+                android:hint="Item Count"
+                android:inputType="number"/>
             <EditText
                 android:id="@+id/weight_product_edittext"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:hint="Weight"/>
             <Spinner
                 android:id="@+id/weight_category_spinner"
@@ -192,17 +186,25 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/price_product_edittext"
+            android:id="@+id/mrpprice_product_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price per Kg/Ltr/Item"
+            android:hint="MRP Price per Kg/Ltr/Item"
+            android:inputType="numberDecimal"/>
+
+        <EditText
+            android:id="@+id/sellingprice_product_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selling Price per Kg/Ltr/Item"
             android:inputType="numberDecimal"/>
 
         <Button
             android:id="@+id/add_product_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Store"/>
+            android:text="Save"
+            android:layout_marginTop="20dp"/>
 
     </LinearLayout>
 

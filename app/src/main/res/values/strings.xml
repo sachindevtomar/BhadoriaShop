@@ -9,6 +9,9 @@
     <string name="AuthSuccessMessage">Authentication is Successful</string>
     <string name="AuthFailedMessage">Authentication has failed.</string>
     <string name="title_activity_admin_tabbed">AdminTabbedActivity</string>
+    <string name="fill_required_data">Please fill all the required Fields</string>
+    <string name="fill_data_for_count_measurein">Fill required fields When MeasureIn is Count</string>
+    <string name="fill_required_wtltr_measurein">Fill required data when measureIn is Wt/Ltr</string>
 
 
     <string-array name="weight_category_array">

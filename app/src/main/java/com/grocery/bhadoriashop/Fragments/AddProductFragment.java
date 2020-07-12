@@ -35,19 +35,21 @@ import java.util.Map;
 
 public class AddProductFragment extends Fragment {
     Spinner productCategorySpinner, productSubCategorySpinner, totalWeigtCategorySpinner, weightCategorySpinner;
-    EditText productNameEditText, brandEditText, totalWeightEditText, productCountEditText, productWeightEditText, priceEditText;
-    Button addProductBtn;
+    EditText productNameEditText, brandEditText, totalWeightEditText, productCountEditText, productWeightEditText, mrpPriceEditText, sellingPriceEditText;
+    Button saveProductBtn;
     LinearLayout weightBasedLinearLayout, countBasedLinearLayout, categoryLoadingLinearLayout, subcategoryLoadingLinearLayout, categoryContentLinearLayout, subcategoryContentLinearLayout;
     RelativeLayout subcategoryRelativeLayout;
     RadioGroup measureInRadioGroup;
     RadioButton measureWtLtrRadioBtn, measureCountRadioBtn, measureNARadioBtn;
     private DatabaseReference mDatabase;
     ArrayList<String> arrayProductCategory, arrayProductSubCategory;
+    View completeScopeView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_product, container, false);
+        completeScopeView = rootView;
 
         initializeAllTheElements(rootView);
         fetchProductCategoriesForSpinner(rootView);
@@ -122,6 +124,18 @@ public class AddProductFragment extends Fragment {
             }
         });
 
+        saveProductBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(validateDataBeforeSaving()){
+
+                }
+                else{
+                    Log.d("Error","Error Occured ");
+                }
+            }
+        });
+
         measureInRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedRadioButoonId) {
@@ -165,6 +179,31 @@ public class AddProductFragment extends Fragment {
         });
     }
 
+    private boolean validateDataBeforeSaving() {
+        if(isNullOrEmpty(productCategorySpinner.getSelectedItem().toString()) || isNullOrEmpty(productSubCategorySpinner.getSelectedItem().toString()) || isNullOrEmpty(productNameEditText.getText().toString()) || isNullOrEmpty(brandEditText.getText().toString()) || isNullOrEmpty(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString()) || isNullOrEmpty(mrpPriceEditText.getText().toString()) || isNullOrEmpty(sellingPriceEditText.getText().toString())) {
+            Toast.makeText(getActivity(), R.string.fill_required_data, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Count") && (isNullOrEmpty(productCountEditText.getText().toString()) || ( !weightCategorySpinner.getSelectedItem().toString().equals("NA") && isNullOrEmpty(productWeightEditText.getText().toString())))){
+            Toast.makeText(getActivity(), R.string.fill_data_for_count_measurein, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Wt/Ltr") && (isNullOrEmpty(totalWeightEditText.getText().toString()))){
+            Toast.makeText(getActivity(), R.string.fill_required_wtltr_measurein, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(isNullOrEmpty(totalWeightEditText.getText().toString()))
+            Log.d("Error",((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString());
+        Toast.makeText(getActivity(), "data validation success", Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    public static boolean isNullOrEmpty(String str) {
+        if(str != null && !str.trim().isEmpty())
+            return false;
+        return true;
+    }
+
     private void initializeAllTheElements(View rootView) {
         //Database Reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -179,9 +218,10 @@ public class AddProductFragment extends Fragment {
         totalWeightEditText = rootView.findViewById(R.id.total_weight_edittext);
         productCountEditText = rootView.findViewById(R.id.count_product_edittext);
         productWeightEditText = rootView.findViewById(R.id.weight_product_edittext);
-        priceEditText = rootView.findViewById(R.id.price_product_edittext);
+        mrpPriceEditText = rootView.findViewById(R.id.mrpprice_product_edittext);
+        sellingPriceEditText = rootView.findViewById(R.id.sellingprice_product_edittext);
         //Buttons
-        addProductBtn = rootView.findViewById(R.id.add_product_btn);
+        saveProductBtn = rootView.findViewById(R.id.add_product_btn);
         //LinearLayouts
         weightBasedLinearLayout = rootView.findViewById(R.id.weight_based_linearlayout);
         countBasedLinearLayout = rootView.findViewById(R.id.count_based_linearlayout);
