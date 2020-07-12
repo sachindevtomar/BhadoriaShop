@@ -1,5 +1,6 @@
 package com.grocery.bhadoriashop.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.grocery.bhadoriashop.AdminTabbedActivity;
 import com.grocery.bhadoriashop.R;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
@@ -131,6 +133,9 @@ public class LoginFragment extends Fragment {
                     navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
                     navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
                     Log.d("TAG","Reached to verify auth Success");
+                    Intent intent = new Intent(getActivity(), AdminTabbedActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
                 else {
                     Log.d("TAG","Reached to verify auth Failure");

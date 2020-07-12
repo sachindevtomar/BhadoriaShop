@@ -11,12 +11,84 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp">
-        <Spinner
-            android:id="@+id/product_category_spinner"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/category_content_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category: "/>
+                <Spinner
+                    android:id="@+id/product_category_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/category_loading_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible">
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fetching Product Categories..."
+                    android:layout_marginLeft="20dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/subcategor_product_relativelayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
-
+            android:visibility="gone">
+            <LinearLayout
+                android:id="@+id/subcategory_content_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SubCategory: "/>
+                <Spinner
+                    android:id="@+id/product_subcategory_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/subcategory_loading_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible">
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fetching Product SubCategories..."
+                    android:layout_marginLeft="20dp"/>
+            </LinearLayout>
+        </RelativeLayout>
         <EditText
             android:id="@+id/name_product_edittext"
             android:layout_width="match_parent"
@@ -49,6 +121,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/count_measure_radiobtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Count"/>
+                <RadioButton
                     android:id="@+id/wtltr_measure_radiobtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -56,14 +137,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wt/Ltr"/>
-                <RadioButton
-                    android:id="@+id/count_measure_radiobtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Count"/>
                 <RadioButton
                     android:id="@+id/na_measure_radiobtn"
                     android:layout_width="wrap_content"
@@ -80,7 +153,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:visibility="gone">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,7 +166,7 @@
                 android:layout_marginLeft="13dp"/>
             <Spinner
                 android:id="@+id/total_weight_category_spinner"
-                android:layout_width="150dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
@@ -113,7 +187,7 @@
                 android:hint="Weight"/>
             <Spinner
                 android:id="@+id/weight_category_spinner"
-                android:layout_width="150dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 

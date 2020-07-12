@@ -9,11 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,44 +34,133 @@ import java.util.List;
 import java.util.Map;
 
 public class AddProductFragment extends Fragment {
-    Spinner productCategorySpinner, totalWeigtCategorySpinner, weightCategorySpinner;
+    Spinner productCategorySpinner, productSubCategorySpinner, totalWeigtCategorySpinner, weightCategorySpinner;
     EditText productNameEditText, brandEditText, totalWeightEditText, productCountEditText, productWeightEditText, priceEditText;
     Button addProductBtn;
-    LinearLayout weightBasedLinearLayout, countBasedLinearLayout;
+    LinearLayout weightBasedLinearLayout, countBasedLinearLayout, categoryLoadingLinearLayout, subcategoryLoadingLinearLayout, categoryContentLinearLayout, subcategoryContentLinearLayout;
+    RelativeLayout subcategoryRelativeLayout;
+    RadioGroup measureInRadioGroup;
+    RadioButton measureWtLtrRadioBtn, measureCountRadioBtn, measureNARadioBtn;
     private DatabaseReference mDatabase;
-    ArrayList<String> arrayProductCategory;
+    ArrayList<String> arrayProductCategory, arrayProductSubCategory;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_product, container, false);
 
         initializeAllTheElements(rootView);
-        fetchProductCategories(rootView);
+        fetchProductCategoriesForSpinner(rootView);
 
         String[] weightCategoryArray = getResources().getStringArray(R.array.weight_category_array);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(),R.layout.weight_category_spinner_items,R.id.spinner_item, weightCategoryArray);
         totalWeigtCategorySpinner.setAdapter(adapter);
         weightCategorySpinner.setAdapter(adapter);
+
+        setListenersBasedOnBusinessLogic(rootView);
         // Inflate the layout for this fragment
         return rootView;
     }
 
-    private void fetchProductCategories(View rootView) {
+    private void fetchProductCategoriesForSpinner(View rootView) {
         arrayProductCategory = new ArrayList<>();
         mDatabase.child("ProductCategory").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
+                    //Fetch Category
                     for (DataSnapshot childDataSnapshot : snapshot.getChildren()) {
-                        arrayProductCategory.add(childDataSnapshot.getValue().toString());
+                        arrayProductCategory.add(childDataSnapshot.getKey().toString());
                     }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.weight_category_spinner_items,R.id.spinner_item,  arrayProductCategory);
+                    productCategorySpinner.setAdapter(arrayAdapter);
+                    categoryLoadingLinearLayout.setVisibility(View.GONE);
+                    categoryContentLinearLayout.setVisibility(View.VISIBLE);
+                    subcategoryRelativeLayout.setVisibility(View.VISIBLE);
                 }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.weight_category_spinner_items,R.id.spinner_item,  arrayProductCategory);
-                productCategorySpinner.setAdapter(arrayAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    private void setListenersBasedOnBusinessLogic(View rootView) {
+
+        productCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                subcategoryContentLinearLayout.setVisibility(View.GONE);
+                subcategoryLoadingLinearLayout.setVisibility(View.VISIBLE);
+                Log.d("TAG","Product Category Spinner Item -> " + productCategorySpinner.getSelectedItem().toString());
+                arrayProductSubCategory = new ArrayList<>();
+                mDatabase.child("ProductCategory").child(productCategorySpinner.getSelectedItem().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            //Fetch SubCategory
+                            for (DataSnapshot childDataSnapshot : snapshot.getChildren()) {
+                                arrayProductSubCategory.add(childDataSnapshot.getValue().toString());
+                            }
+                            ArrayAdapter<String> arraySubCategoryAdapter = new ArrayAdapter<String>(getContext(), R.layout.weight_category_spinner_items,R.id.spinner_item,  arrayProductSubCategory);
+                            productSubCategorySpinner.setAdapter(arraySubCategoryAdapter);
+                            subcategoryContentLinearLayout.setVisibility(View.VISIBLE);
+                            subcategoryLoadingLinearLayout.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        measureInRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedRadioButoonId) {
+                if(checkedRadioButoonId == R.id.count_measure_radiobtn){
+                    countBasedLinearLayout.setVisibility(View.VISIBLE);
+                    weightBasedLinearLayout.setVisibility(View.GONE);
+                    totalWeightEditText.setText(null);
+                }
+                else if(checkedRadioButoonId == R.id.wtltr_measure_radiobtn){
+                    countBasedLinearLayout.setVisibility(View.GONE);
+                    weightBasedLinearLayout.setVisibility(View.VISIBLE);
+                    productCountEditText.setText(null);
+                    productWeightEditText.setText(null);
+                }
+                else{
+                    countBasedLinearLayout.setVisibility(View.GONE);
+                    weightBasedLinearLayout.setVisibility(View.GONE);
+                    productCountEditText.setText(null);
+                    productWeightEditText.setText(null);
+                    totalWeightEditText.setText(null);
+                }
+            }
+        });
+
+        weightCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Log.d("TAG","Spinner Item -> " + weightCategorySpinner.getSelectedItem().toString());
+                if(weightCategorySpinner.getSelectedItem().toString().equals("NA")){
+                    productWeightEditText.setText(null);
+                    productWeightEditText.setVisibility(View.GONE);
+                }
+                else
+                    productWeightEditText.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
             }
         });
     }
@@ -77,6 +170,7 @@ public class AddProductFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //Spiners
         productCategorySpinner = rootView.findViewById(R.id.product_category_spinner);
+        productSubCategorySpinner = rootView.findViewById(R.id.product_subcategory_spinner);
         totalWeigtCategorySpinner = rootView.findViewById(R.id.total_weight_category_spinner);
         weightCategorySpinner = rootView.findViewById(R.id.weight_category_spinner);
         //EditText
@@ -88,8 +182,20 @@ public class AddProductFragment extends Fragment {
         priceEditText = rootView.findViewById(R.id.price_product_edittext);
         //Buttons
         addProductBtn = rootView.findViewById(R.id.add_product_btn);
-        //Layouts
+        //LinearLayouts
         weightBasedLinearLayout = rootView.findViewById(R.id.weight_based_linearlayout);
         countBasedLinearLayout = rootView.findViewById(R.id.count_based_linearlayout);
+        categoryLoadingLinearLayout = rootView.findViewById(R.id.category_loading_linearlayout);
+        subcategoryLoadingLinearLayout = rootView.findViewById(R.id.subcategory_loading_linearlayout);
+        categoryContentLinearLayout = rootView.findViewById(R.id.category_content_linearlayout);
+        subcategoryContentLinearLayout = rootView.findViewById(R.id.subcategory_content_linearlayout);
+        //RelativeLayout
+        subcategoryRelativeLayout = rootView.findViewById(R.id.subcategor_product_relativelayout);
+        //RadioGroup
+        measureInRadioGroup = rootView.findViewById(R.id.measure_product_radiogroup);
+        //RadioButton
+        measureCountRadioBtn =  rootView.findViewById(R.id.count_measure_radiobtn);
+        measureWtLtrRadioBtn =  rootView.findViewById(R.id.wtltr_measure_radiobtn);
+        measureNARadioBtn =  rootView.findViewById(R.id.na_measure_radiobtn);
     }
 }
