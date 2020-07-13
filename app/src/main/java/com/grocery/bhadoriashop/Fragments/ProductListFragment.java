@@ -3,63 +3,68 @@ package com.grocery.bhadoriashop.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.grocery.bhadoriashop.Adapter.CardAdapterAdmin;
+import com.grocery.bhadoriashop.Models.Planet;
 import com.grocery.bhadoriashop.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProductListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class ProductListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProductListFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProductListFragment newInstance(String param1, String param2) {
-        ProductListFragment fragment = new ProductListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private RecyclerView recyclerView;
+    private CardAdapterAdmin adapter;
+    private ArrayList<Planet> planetArrayList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_product_list, container, false);
+        initView(rootView);
+
+        return rootView;
+    }
+
+    private void initView(View rootView) {
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        planetArrayList = new ArrayList<>();
+        adapter = new CardAdapterAdmin(getActivity(), planetArrayList);
+        recyclerView.setAdapter(adapter);
+        // recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        createListData();
+    }
+
+    private void createListData() {
+        Planet planet = new Planet("Earth", 150, 10, 12750);
+        planetArrayList.add(planet);
+        planet = new Planet("Jupiter", 778, 26, 143000);
+        planetArrayList.add(planet);
+        planet = new Planet("Mars", 228, 4, 6800);
+        planetArrayList.add(planet);
+        planet = new Planet("Pluto", 5900, 1, 2320);
+        planetArrayList.add(planet);
+        planet = new Planet("Venus", 108, 9, 12750);
+        planetArrayList.add(planet);
+        planet = new Planet("Saturn", 1429, 11, 120000);
+        planetArrayList.add(planet);
+        planet = new Planet("Mercury", 58, 4, 4900);
+        planetArrayList.add(planet);
+        planet = new Planet("Neptune", 4500, 12, 50500);
+        planetArrayList.add(planet);
+        planet = new Planet("Uranus", 2870, 9, 52400);
+        planetArrayList.add(planet);
+        adapter.notifyDataSetChanged();
     }
 }

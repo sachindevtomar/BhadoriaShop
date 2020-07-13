@@ -23,8 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -57,12 +59,14 @@ import static android.app.Activity.RESULT_OK;
 public class AddProductFragment extends Fragment {
     Spinner productCategorySpinner, productSubCategorySpinner, totalWeigtCategorySpinner, weightCategorySpinner;
     EditText productNameEditText, brandEditText, totalWeightEditText, productCountEditText, productWeightEditText, mrpPriceEditText, sellingPriceEditText;
-    Button saveProductBtn;
-    LinearLayout weightBasedLinearLayout, countBasedLinearLayout, categoryLoadingLinearLayout, subcategoryLoadingLinearLayout, categoryContentLinearLayout, subcategoryContentLinearLayout;
+    Button saveProductBtn, addProductImageBtn;
+    ImageButton productCloseImageBtn;
+    LinearLayout weightBasedLinearLayout, countBasedLinearLayout, categoryLoadingLinearLayout, subcategoryLoadingLinearLayout, categoryContentLinearLayout, subcategoryContentLinearLayout, addImageLinearLayout;
     RelativeLayout subcategoryRelativeLayout;
     RadioGroup measureInRadioGroup;
     RadioButton measureWtLtrRadioBtn, measureCountRadioBtn, measureNARadioBtn;
     ImageView productImageView;
+    ProgressBar saveProductProgressBar;
     private DatabaseReference mDatabase;
     private StorageReference storageRef;
     ArrayList<String> arrayProductCategory, arrayProductSubCategory;
@@ -152,19 +156,33 @@ public class AddProductFragment extends Fragment {
         saveProductBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveProductProgressBar.setVisibility(View.VISIBLE);
+                saveProductBtn.setVisibility(View.GONE);
                 if(validateDataBeforeSaving()){
                     saveProductIntoDB();
                 }
                 else{
+                    saveProductProgressBar.setVisibility(View.GONE);
+                    saveProductBtn.setVisibility(View.VISIBLE);
                     Log.d("Error","Error Occured while validating data");
                 }
             }
         });
 
-        productImageView.setOnClickListener(new View.OnClickListener() {
+        addProductImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage(getContext());
+            }
+        });
+
+        productCloseImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productCloseImageBtn.setVisibility(View.GONE);
+                productImageView.setVisibility(View.GONE);
+                addImageLinearLayout.setVisibility(View.VISIBLE);
+                productImageByteArray = null;
             }
         });
 
@@ -224,31 +242,43 @@ public class AddProductFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.fill_required_wtltr_measurein, Toast.LENGTH_LONG).show();
             return false;
         }
-        Toast.makeText(getActivity(), "data validation success", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getActivity(), "data validation success", Toast.LENGTH_LONG).show();
         return true;
     }
 
     private void saveProductIntoDB() {
-
         try {
             StorageReference imageStorageRef = storageRef.child("Products").child("Image_" + new Date().getTime());
-            UploadTask uploadTask = imageStorageRef.putBytes(productImageByteArray);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getActivity(), "Image Upload failed", Toast.LENGTH_LONG).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    DatabaseReference productsReference = mDatabase.child("Products");
-                    productsReference.push().setValue(getProductToSave(taskSnapshot.getMetadata().getReference().getDownloadUrl().toString()));
-                    Toast.makeText(getActivity(), "Product is Saved", Toast.LENGTH_LONG).show();
-                }
-            });
-            Log.d("TAG", "Product is Saved");
+            if(productImageByteArray != null){
+                UploadTask uploadTask = imageStorageRef.putBytes(productImageByteArray);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getActivity(), "Image Upload failed", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        DatabaseReference productsReference = mDatabase.child("Products");
+                        productsReference.push().setValue(getProductToSave(taskSnapshot.getMetadata().getReference().getDownloadUrl().toString()));
+                        saveProductProgressBar.setVisibility(View.GONE);
+                        saveProductBtn.setVisibility(View.VISIBLE);
+                        Toast.makeText(getActivity(), "Product is saved with image", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            else{
+                DatabaseReference productsReference = mDatabase.child("Products");
+                productsReference.push().setValue(getProductToSave(""));
+                saveProductProgressBar.setVisibility(View.GONE);
+                saveProductBtn.setVisibility(View.VISIBLE);
+                Toast.makeText(getActivity(), "Product is saved without image", Toast.LENGTH_LONG).show();
+            }
+            Log.d("TAG", "Product is saved");
         }
         catch (Exception ex) {
+            saveProductProgressBar.setVisibility(View.GONE);
+            saveProductBtn.setVisibility(View.VISIBLE);
             Log.d("Error", ex.getMessage());
         }
     }
@@ -317,13 +347,15 @@ public class AddProductFragment extends Fragment {
                             productImageBitmap = compressImageTo40(imageOriginalBitmap);
                             productImageView.setImageBitmap(productImageBitmap);
                         }
-
                         catch (Exception ex){
                             Log.d("ERROR", "Error in galary picture: " + ex.getMessage());
                         }
                     }
                     break;
             }
+            addImageLinearLayout.setVisibility(View.GONE);
+            productCloseImageBtn.setVisibility(View.VISIBLE);
+            productImageView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -361,6 +393,9 @@ public class AddProductFragment extends Fragment {
         sellingPriceEditText = rootView.findViewById(R.id.sellingprice_product_edittext);
         //Buttons
         saveProductBtn = rootView.findViewById(R.id.add_product_btn);
+        addProductImageBtn = rootView.findViewById(R.id.add_product_image_btn);
+        //ImageButtons
+        productCloseImageBtn = rootView.findViewById(R.id.product_image_close_imgbtn);
         //LinearLayouts
         weightBasedLinearLayout = rootView.findViewById(R.id.weight_based_linearlayout);
         countBasedLinearLayout = rootView.findViewById(R.id.count_based_linearlayout);
@@ -368,6 +403,7 @@ public class AddProductFragment extends Fragment {
         subcategoryLoadingLinearLayout = rootView.findViewById(R.id.subcategory_loading_linearlayout);
         categoryContentLinearLayout = rootView.findViewById(R.id.category_content_linearlayout);
         subcategoryContentLinearLayout = rootView.findViewById(R.id.subcategory_content_linearlayout);
+        addImageLinearLayout = rootView.findViewById(R.id.add_image_linearlayout);
         //RelativeLayout
         subcategoryRelativeLayout = rootView.findViewById(R.id.subcategor_product_relativelayout);
         //RadioGroup
@@ -377,6 +413,8 @@ public class AddProductFragment extends Fragment {
         measureWtLtrRadioBtn =  rootView.findViewById(R.id.wtltr_measure_radiobtn);
         measureNARadioBtn =  rootView.findViewById(R.id.na_measure_radiobtn);
         //ImageView
-        productImageView = rootView.findViewById(R.id.product_ImageView);
+        productImageView = rootView.findViewById(R.id.product_imageview);
+        //ProgressBar
+        saveProductProgressBar = rootView.findViewById(R.id.save_product_progressbar);
     }
 }
