@@ -40,5 +40,7 @@ dependencies {
     implementation 'com.github.joielechong:countrycodepicker:2.4.2'
     implementation 'com.google.firebase:firebase-database:19.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

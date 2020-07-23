@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -259,11 +260,19 @@ public class AddProductFragment extends Fragment {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        DatabaseReference productsReference = mDatabase.child("Products");
-                        productsReference.push().setValue(getProductToSave(taskSnapshot.getMetadata().getReference().getDownloadUrl().toString()));
-                        saveProductProgressBar.setVisibility(View.GONE);
-                        saveProductBtn.setVisibility(View.VISIBLE);
-                        Toast.makeText(getActivity(), "Product is saved with image", Toast.LENGTH_LONG).show();
+                        //Get the image download url that needs to be stored in Realtime database
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                //Store values in Realtime database of firebase
+                                DatabaseReference productsReference = mDatabase.child("Products");
+                                productsReference.push().setValue(getProductToSave(String.valueOf(uri)));
+                                saveProductProgressBar.setVisibility(View.GONE);
+                                saveProductBtn.setVisibility(View.VISIBLE);
+                                Toast.makeText(getActivity(), "Product is saved with image", Toast.LENGTH_LONG).show();
+                                resetTheValues();
+                            }
+                        });
                     }
                 });
             }
@@ -283,15 +292,43 @@ public class AddProductFragment extends Fragment {
         }
     }
 
+    private void resetTheValues() {
+        totalWeightEditText.setText("");
+        mrpPriceEditText.setText("");
+        sellingPriceEditText.setText("");
+        productNameEditText.setText("");
+        brandEditText.setText("");
+        productCountEditText.setText("");
+        productWeightEditText.setText("");
+        //Image Reset
+        productCloseImageBtn.setVisibility(View.GONE);
+        productImageView.setVisibility(View.GONE);
+        addImageLinearLayout.setVisibility(View.VISIBLE);
+        productImageByteArray = null;
+    }
+
     private Product getProductToSave(String productImageUrl) {
+        double convertedTotalWeight = 0.0;
+        String convertedTotalWeightMeasure = "Grams";
+
+        if(totalWeigtCategorySpinner.getSelectedItem().toString().equals("Kgs")) {
+            convertedTotalWeight = Double.parseDouble(isNullOrEmpty(totalWeightEditText.getText().toString()) ? "0" : totalWeightEditText.getText().toString()) * 1000;
+            convertedTotalWeightMeasure = "Grams";
+        }
+        else if(totalWeigtCategorySpinner.getSelectedItem().toString().equals("Liters")){
+            convertedTotalWeight = Double.parseDouble(isNullOrEmpty(totalWeightEditText.getText().toString()) ? "0" : totalWeightEditText.getText().toString()) * 1000;
+            convertedTotalWeightMeasure = "Mls";
+        }
+        else{}
+
         return new Product(
                 productNameEditText.getText().toString(),
                 productCategorySpinner.getSelectedItem().toString(),
                 productSubCategorySpinner.getSelectedItem().toString(),
                 brandEditText.getText().toString(),
                 ((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString(),
-                Double.parseDouble(isNullOrEmpty(totalWeightEditText.getText().toString()) ? "0" : totalWeightEditText.getText().toString()),
-                totalWeigtCategorySpinner.getSelectedItem().toString(),
+                convertedTotalWeight,
+                convertedTotalWeightMeasure,
                 Integer.parseInt(isNullOrEmpty(productCountEditText.getText().toString()) ? "0" : productCountEditText.getText().toString()),
                 Double.parseDouble(isNullOrEmpty(productWeightEditText.getText().toString()) ? "0" : productWeightEditText.getText().toString()),
                 weightCategorySpinner.getSelectedItem().toString(),
