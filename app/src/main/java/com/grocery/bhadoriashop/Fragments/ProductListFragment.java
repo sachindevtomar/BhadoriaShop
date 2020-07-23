@@ -2,14 +2,20 @@ package com.grocery.bhadoriashop.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -37,6 +43,7 @@ public class ProductListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_product_list, container, false);
+        setHasOptionsMenu(true);
         initView(rootView);
 
         return rootView;
@@ -51,12 +58,21 @@ public class ProductListFragment extends Fragment {
     }
 
     //search data
-    private void firebaseSearch(String searchText) {
+    private void firebaseSearch(String query) {
 
+        firebaseRecyclerAdapter.stopListening();
         //convert string entered in SearchView to lowercase
-        String query = searchText.toLowerCase();
+        //String query = searchText.toLowerCase();
+        Log.d("TAG","Entered searched keyword: "+query);
 
-        Query firebaseSearchQuery = mRef.orderByChild("search").startAt(query).endAt(query + "\uf8ff");
+        if(query != null && query.length()>0){
+            char[] letters=query.toCharArray();
+            String firstLetter = String.valueOf(letters[0]).toUpperCase();
+            String remainingLetters = query.substring(1);
+            query=firstLetter+remainingLetters;
+        }
+
+        Query firebaseSearchQuery = mRef.orderByChild("ProductName").startAt(query).endAt(query + "\uf8ff");
 
         FirebaseRecyclerOptions<AdminProductList> options =
                 new FirebaseRecyclerOptions.Builder<AdminProductList>()
@@ -75,18 +91,21 @@ public class ProductListFragment extends Fragment {
             @Override
             protected void onBindViewHolder(AdminProductListViewHolder holder, int position, AdminProductList model) {
                 // Bind the image_details object to the BlogViewHolder
-                // ...
+                holder.setDetails(getContext(), model.getProductName(), model.getProductCategory(), model.getProductSubCategory(),
+                        model.getProductBrand(), model.getProductImageURL(), model.getMeasureIn(), model.getTotalWeightIn(), model.getItemWeightIn(), model.getMRPPricePerUnit(), model.getSellingPricePerUnit(), model.getTotalWeight(), model.getItemWeight(), model.getItemCount());
             }
         };
 
         //set adapter to recyclerview
         recyclerView.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
     }
 
     @Override
     public void onStart() {
         super.onStart();
         Log.d("TAG","onStart 1");
+
         FirebaseRecyclerOptions<AdminProductList> options =
                 new FirebaseRecyclerOptions.Builder<AdminProductList>()
                         .setQuery(mRef, AdminProductList.class)
@@ -112,6 +131,28 @@ public class ProductListFragment extends Fragment {
         //set adapter to recyclerview
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.search_product_item);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                firebaseSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Filter as you type
+                firebaseSearch(newText);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
