@@ -104,13 +104,12 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("TAG","onStart 1");
 
         FirebaseRecyclerOptions<AdminProductList> options =
                 new FirebaseRecyclerOptions.Builder<AdminProductList>()
                         .setQuery(mRef, AdminProductList.class)
                         .build();
-
+        Log.d("TAG","OnStart: "+options.getSnapshots().size());
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AdminProductList, AdminProductListViewHolder>(options) {
             @Override
             public AdminProductListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
