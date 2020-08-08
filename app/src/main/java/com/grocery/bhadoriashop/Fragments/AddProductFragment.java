@@ -54,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
+
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -232,15 +234,15 @@ public class AddProductFragment extends Fragment {
 
     private boolean validateDataBeforeSaving() {
         if(isNullOrEmpty(productCategorySpinner.getSelectedItem().toString()) || isNullOrEmpty(productSubCategorySpinner.getSelectedItem().toString()) || isNullOrEmpty(productNameEditText.getText().toString()) || isNullOrEmpty(brandEditText.getText().toString()) || isNullOrEmpty(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString()) || isNullOrEmpty(mrpPriceEditText.getText().toString()) || isNullOrEmpty(sellingPriceEditText.getText().toString())) {
-            Toast.makeText(getActivity(), R.string.fill_required_data, Toast.LENGTH_LONG).show();
+            Toasty.error(getActivity(), R.string.fill_required_data, Toast.LENGTH_LONG, true).show();
             return false;
         }
         if(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Count") && (isNullOrEmpty(productCountEditText.getText().toString()) || ( !weightCategorySpinner.getSelectedItem().toString().equals("NA") && isNullOrEmpty(productWeightEditText.getText().toString())))){
-            Toast.makeText(getActivity(), R.string.fill_data_for_count_measurein, Toast.LENGTH_LONG).show();
+            Toasty.error(getActivity(), R.string.fill_data_for_count_measurein, Toast.LENGTH_LONG, true).show();
             return false;
         }
         if(((RadioButton) completeScopeView.findViewById(measureInRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Wt/Ltr") && (isNullOrEmpty(totalWeightEditText.getText().toString()))){
-            Toast.makeText(getActivity(), R.string.fill_required_wtltr_measurein, Toast.LENGTH_LONG).show();
+            Toasty.error(getActivity(), R.string.fill_required_wtltr_measurein, Toast.LENGTH_LONG, true).show();
             return false;
         }
         //Toast.makeText(getActivity(), "data validation success", Toast.LENGTH_LONG).show();
@@ -255,7 +257,7 @@ public class AddProductFragment extends Fragment {
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getActivity(), "Image Upload failed", Toast.LENGTH_LONG).show();
+                        Toasty.error(getActivity(), "Image Upload failed", Toast.LENGTH_LONG, true).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -269,7 +271,7 @@ public class AddProductFragment extends Fragment {
                                 productsReference.push().setValue(getProductToSave(String.valueOf(uri)));
                                 saveProductProgressBar.setVisibility(View.GONE);
                                 saveProductBtn.setVisibility(View.VISIBLE);
-                                Toast.makeText(getActivity(), "Product is saved with image", Toast.LENGTH_LONG).show();
+                                Toasty.success(getActivity(), "Product is saved with image", Toast.LENGTH_LONG, true).show();
                                 resetTheValues();
                             }
                         });
@@ -281,7 +283,7 @@ public class AddProductFragment extends Fragment {
                 productsReference.push().setValue(getProductToSave(""));
                 saveProductProgressBar.setVisibility(View.GONE);
                 saveProductBtn.setVisibility(View.VISIBLE);
-                Toast.makeText(getActivity(), "Product is saved without image", Toast.LENGTH_LONG).show();
+                Toasty.success(getActivity(), "Product is saved without image", Toast.LENGTH_LONG, true).show();
             }
             Log.d("TAG", "Product is saved");
         }
