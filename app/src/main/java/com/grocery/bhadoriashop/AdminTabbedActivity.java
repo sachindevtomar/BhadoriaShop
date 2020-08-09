@@ -96,7 +96,7 @@ public class AdminTabbedActivity extends AppCompatActivity {
             case R.id.add_category_menu_item:
                 FragmentManager fm = getSupportFragmentManager();
                 AddCategoryAdminDialog dialogFragment=new AddCategoryAdminDialog(this);
-                dialogFragment.show(fm, "fragment_edit_name");
+                dialogFragment.show(fm, "dialog_fragment_admin");
 
                 return true;
             case R.id.show_category_menu_item:
