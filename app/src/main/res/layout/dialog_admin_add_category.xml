@@ -86,7 +86,7 @@
         android:layout_below="@+id/category_admin_dialog_linearlayout">
         <Button
             android:id="@+id/add_category_admin_dialog_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add"
             android:gravity="center_vertical|center_horizontal"
@@ -96,8 +96,8 @@
             android:textStyle="bold"
             android:textSize="18dp"
             android:background="@drawable/button_background_gradient"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"/>
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"/>
 
         <ProgressBar
             android:id="@+id/save_category_progressbar"
