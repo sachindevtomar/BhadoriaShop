@@ -29,7 +29,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Category: "/>
+                    android:text="Category: "
+                    android:textColor="@color/buttonCommonColorDark"/>
                 <Spinner
                     android:id="@+id/product_category_spinner"
                     android:layout_width="match_parent"
@@ -71,7 +72,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SubCategory: "/>
+                    android:text="SubCategory: "
+                    android:textColor="@color/buttonCommonColorDark"/>
                 <Spinner
                     android:id="@+id/product_subcategory_spinner"
                     android:layout_width="match_parent"
@@ -120,6 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Measure In:"
+                android:textColor="@color/buttonCommonColorDark"
                 android:layout_gravity="center"/>
             <RadioGroup
                 android:id="@+id/measure_product_radiogroup"
@@ -156,16 +159,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Weight: "/>
+                android:text="Total Weight: "
+                android:textColor="@color/buttonCommonColorDark"/>
             <EditText
                 android:id="@+id/total_weight_edittext"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:layout_marginLeft="13dp"/>
+                android:layout_marginLeft="5dp"/>
             <Spinner
                 android:id="@+id/total_weight_category_spinner"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
@@ -224,12 +228,13 @@
                         android:id="@+id/add_product_image_btn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_add_circle_outline_black_24dp"
+                        android:background="@drawable/ic_add_circle_outline_common_24dp"
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Image"/>
+                        android:text="Add Image"
+                        android:textColor="@color/buttonCommonColorDark"/>
 
                 </LinearLayout>
 

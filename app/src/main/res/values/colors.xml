@@ -7,5 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="backgroundLogin">#333333</color>
     <color name="buttonCommonColor">#009a9a</color>
+    <color name="buttonCommonColorDark">#FF0D7A7A</color>
     <color name="defaultBackgroundColor">#fafafa</color>
 </resources>
