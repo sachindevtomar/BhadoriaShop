@@ -13,11 +13,17 @@ import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.grocery.bhadoriashop.Fragments.AddProductFragment;
 import com.grocery.bhadoriashop.Fragments.ProductListFragment;
+
+import es.dmoral.toasty.Toasty;
 
 public class AdminTabbedActivity extends AppCompatActivity {
 
@@ -45,7 +51,8 @@ public class AdminTabbedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_tabbed);
-
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.admin_toolbar);
+//        setSupportActionBar(toolbar);
 
         // Set the Toolbar as the activity's app bar (instead of the default ActionBar)
 //        Toolbar toolbar = findViewById(R.id.toolbar);
@@ -70,6 +77,29 @@ public class AdminTabbedActivity extends AppCompatActivity {
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_EXTERNAL_WRITE_STORAGE_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.admin_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.add_category_menu_item:
+                Toasty.success(getApplicationContext(), "Item 1 Selected", Toast.LENGTH_LONG, true).show();
+
+                return true;
+            case R.id.show_category_menu_item:
+                Toasty.success(getApplicationContext(),"Item 2 Selected",Toast.LENGTH_LONG, true).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

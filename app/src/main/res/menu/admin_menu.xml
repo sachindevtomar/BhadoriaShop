@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="example.javatpoint.com.optionmenu.MainActivity">
+
+    <item  android:id="@+id/add_category_menu_item"
+        android:title="Add Cataegory"/>
+    <item  android:id="@+id/show_category_menu_item"
+        android:title="Show Categories"/>
+</menu>
