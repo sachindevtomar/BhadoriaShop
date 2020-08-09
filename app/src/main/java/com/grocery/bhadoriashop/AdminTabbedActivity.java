@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
@@ -18,10 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.grocery.bhadoriashop.Fragments.AddProductFragment;
 import com.grocery.bhadoriashop.Fragments.ProductListFragment;
+import com.grocery.bhadoriashop.Helper.AddCategoryAdminDialog;
 
 import es.dmoral.toasty.Toasty;
 
@@ -92,7 +94,9 @@ public class AdminTabbedActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.add_category_menu_item:
-                Toasty.success(getApplicationContext(), "Item 1 Selected", Toast.LENGTH_LONG, true).show();
+                FragmentManager fm = getSupportFragmentManager();
+                AddCategoryAdminDialog dialogFragment=new AddCategoryAdminDialog(this);
+                dialogFragment.show(fm, "fragment_edit_name");
 
                 return true;
             case R.id.show_category_menu_item:

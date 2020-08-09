@@ -257,7 +257,7 @@ public class AddProductFragment extends Fragment {
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toasty.error(getActivity(), "Image Upload failed", Toast.LENGTH_LONG, true).show();
+                        Toasty.error(getActivity(), R.string.image_upload_failed, Toast.LENGTH_LONG, true).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -271,7 +271,7 @@ public class AddProductFragment extends Fragment {
                                 productsReference.push().setValue(getProductToSave(String.valueOf(uri)));
                                 saveProductProgressBar.setVisibility(View.GONE);
                                 saveProductBtn.setVisibility(View.VISIBLE);
-                                Toasty.success(getActivity(), "Product is saved with image", Toast.LENGTH_LONG, true).show();
+                                Toasty.success(getActivity(), R.string.product_saved_with_image, Toast.LENGTH_LONG, true).show();
                                 resetTheValues();
                             }
                         });
@@ -283,7 +283,7 @@ public class AddProductFragment extends Fragment {
                 productsReference.push().setValue(getProductToSave(""));
                 saveProductProgressBar.setVisibility(View.GONE);
                 saveProductBtn.setVisibility(View.VISIBLE);
-                Toasty.success(getActivity(), "Product is saved without image", Toast.LENGTH_LONG, true).show();
+                Toasty.success(getActivity(), R.string.product_saved_without_image, Toast.LENGTH_LONG, true).show();
             }
             Log.d("TAG", "Product is saved");
         }

@@ -12,6 +12,13 @@
     <string name="fill_required_data">Please fill all the required Fields</string>
     <string name="fill_data_for_count_measurein">Fill required fields When MeasureIn is Count</string>
     <string name="fill_required_wtltr_measurein">Fill required data when measureIn is Wt/Ltr</string>
+    <string name="required_category_name">Category Name is required</string>
+    <string name="image_upload_failed">Image Upload failed</string>
+    <string name="product_saved_with_image">Product is saved with image</string>
+    <string name="product_saved_without_image">Product is saved without image</string>
+    <string name="category_saved_without_image">Category is saved without image</string>
+    <string name="category_saved_with_image">Category is saved with image</string>
+    <string name="failed_to_save_category">Failed to save category. Please try again</string>
 
 
     <string-array name="weight_category_array">
