@@ -43,7 +43,6 @@ public class HomeFragment extends Fragment {
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("Products");
-        Log.d("GridView","Working 1");
     }
 
     @Override
@@ -55,11 +54,9 @@ public class HomeFragment extends Fragment {
                         .setQuery(mRef, AdminProductList.class)
                         .build();
 
-        Log.d("GridView","Working 2");
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AdminProductList, UserProductListViewHolder>(options) {
             @Override
             public UserProductListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                Log.d("GridView","Working 3");
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.cardview_user_productlist, parent, false);
 
@@ -75,7 +72,6 @@ public class HomeFragment extends Fragment {
             }
         };
 
-        Log.d("GridView","Working 0 - " + firebaseRecyclerAdapter.getItemCount());
         //set adapter to recyclerview
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();

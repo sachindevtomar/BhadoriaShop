@@ -45,8 +45,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SubCategories "/>
-
+                        android:text="SubCategories :" android:layout_marginBottom="10dp"
+                        android:textColor="#000000"/>
+                    <me.gujun.android.taggroup.TagGroup
+                        android:id="@+id/subcategory_tag_group_cardview"
+                        style="@style/TagGroup" />
             </LinearLayout>
 
         </LinearLayout>
@@ -57,7 +60,8 @@
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/add_subcategory_admin_edittext"
-                android:layout_width="300dp"
+                android:layout_weight="8"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:textSize="15dp"
                 android:hint="Enter SubCategory"/>
@@ -68,9 +72,16 @@
                 />
             <ImageButton
                 android:id="@+id/add_subcategory_admin_imagbtn"
-                android:layout_width="40dp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:background="@drawable/ic_add_circle_outline_black_24dp"/>
+            <ProgressBar
+                android:id="@+id/save_subcategory_progressbar"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:layout_height="40dp"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -19,7 +19,7 @@
             android:id="@+id/product_name_admincard_textview"
             android:text="Product Name"
             android:textColor="#000"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -31,8 +31,8 @@
 
             <ImageView
                 android:id="@+id/product_image_admincard_imageview"
-                android:layout_width="120dp"
-                android:layout_height="100dp"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 android:background="@drawable/ic_shopping_cart_black_24dp"
@@ -104,13 +104,13 @@
                 android:orientation="horizontal">
                 <TextView
                     android:text="MRP: "
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/product_mrp_admincard_textview"
                     android:text="MRP"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -121,13 +121,13 @@
                 android:orientation="horizontal">
                 <TextView
                     android:text="SP: "
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/product_sp_adminlist_textview"
                     android:text="SP"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>

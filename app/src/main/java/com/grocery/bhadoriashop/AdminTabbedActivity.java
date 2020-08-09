@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
@@ -100,7 +101,8 @@ public class AdminTabbedActivity extends AppCompatActivity {
 
                 return true;
             case R.id.show_category_menu_item:
-                Toasty.success(getApplicationContext(),"Item 2 Selected",Toast.LENGTH_LONG, true).show();
+                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

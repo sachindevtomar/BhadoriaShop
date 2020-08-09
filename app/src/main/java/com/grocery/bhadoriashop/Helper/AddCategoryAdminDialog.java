@@ -127,7 +127,7 @@ public class AddCategoryAdminDialog extends DialogFragment implements View.OnCli
                             public void onSuccess(Uri uri) {
                                 //Store values in Realtime database of firebase
                                 DatabaseReference categoryReference = mDatabase.child("ProductCategories");
-                                categoryReference.push().setValue(new ProductCategory(addCategoryEditText.getText().toString(), String.valueOf(uri)));
+                                categoryReference.child(addCategoryEditText.getText().toString()).setValue(new ProductCategory(addCategoryEditText.getText().toString(), String.valueOf(uri)));
 
                                 saveCategoryProgressBar.setVisibility(View.GONE);
                                 addCategoryBtn.setVisibility(View.VISIBLE);
@@ -140,7 +140,7 @@ public class AddCategoryAdminDialog extends DialogFragment implements View.OnCli
             }
             else{
                 DatabaseReference productsReference = mDatabase.child("ProductCategories");
-                productsReference.push().setValue(new ProductCategory(addCategoryEditText.getText().toString(), ""));
+                productsReference.child(addCategoryEditText.getText().toString()).setValue(new ProductCategory(addCategoryEditText.getText().toString(), ""));
                 saveCategoryProgressBar.setVisibility(View.GONE);
                 addCategoryBtn.setVisibility(View.VISIBLE);
                 Toasty.success(getActivity(), R.string.category_saved_without_image, Toast.LENGTH_LONG, true).show();

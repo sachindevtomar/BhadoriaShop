@@ -9,7 +9,8 @@ public class ProductCategory {
         this.CategoryName = CategoryName;
         this.CategoryImageURL = CategoryImageURL;
     }
-
+    public ProductCategory(){
+    }
     public String getCategoryName() {
         return CategoryName;
     }
