@@ -35,7 +35,7 @@
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-                android:background="@drawable/ic_shopping_cart_black_24dp"
+                android:background="@drawable/ic_image_black_24dp"
                 android:layout_marginRight="10dp"/>
 
             <LinearLayout

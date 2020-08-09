@@ -141,7 +141,8 @@
                     android:id="@+id/na_measure_radiobtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA"/>
+                    android:text="NA"
+                    android:enabled="false"/>
             </RadioGroup>
         </LinearLayout>
 <!--        Total Weight-->

@@ -20,12 +20,10 @@
     <string name="category_saved_with_image">Category is saved with image</string>
     <string name="failed_to_save_category">Failed to save category. Please try again</string>
 
-
     <string-array name="weight_category_array">
         <item>Kgs</item>
         <item>Grams</item>
         <item>Liters</item>
         <item>Mls</item>
-        <item>NA</item>
     </string-array>
 </resources>

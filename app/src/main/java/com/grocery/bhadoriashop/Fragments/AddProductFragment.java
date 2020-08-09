@@ -98,7 +98,7 @@ public class AddProductFragment extends Fragment {
 
     private void fetchProductCategoriesForSpinner(View rootView) {
         arrayProductCategory = new ArrayList<>();
-        mDatabase.child("ProductCategory").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("ProductCategories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -129,7 +129,7 @@ public class AddProductFragment extends Fragment {
                 subcategoryLoadingLinearLayout.setVisibility(View.VISIBLE);
                 Log.d("TAG","Product Category Spinner Item -> " + productCategorySpinner.getSelectedItem().toString());
                 arrayProductSubCategory = new ArrayList<>();
-                mDatabase.child("ProductCategory").child(productCategorySpinner.getSelectedItem().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child("ProductCategories").child(productCategorySpinner.getSelectedItem().toString()).child("subCategory").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
