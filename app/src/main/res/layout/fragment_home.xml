@@ -6,11 +6,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeFragment"
-    android:background="@drawable/background_gradient_login">
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+
+        <com.jama.carouselview.CarouselView
+            android:id="@+id/carousel_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:enableSnapping="true"
+            app:scaleOnScroll="false"
+            app:setAutoPlay="true"
+            app:setAutoPlayDelay="3000"
+            app:carouselOffset="center"
+            app:indicatorAnimationType="drop"
+            app:indicatorRadius="5"
+            app:indicatorPadding="5"
+            app:indicatorSelectedColor="@color/colorAccent"
+            app:indicatorUnselectedColor="@color/colorPrimary"
+            app:size="10"
+            app:spacing="10"
+            app:resource="@layout/image_carousel_item"/>
+    </LinearLayout>
 
     <!--RecyclerView-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/productlist_user_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/productlist_user_recyclerview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
 </LinearLayout>
