@@ -1,6 +1,7 @@
 package com.grocery.bhadoriashop.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.grocery.bhadoriashop.Adapter.HomeProductCategoryListViewHolder;
+import com.grocery.bhadoriashop.Models.ProductCategory;
 import com.grocery.bhadoriashop.R;
 import com.jama.carouselview.CarouselView;
 import com.jama.carouselview.CarouselViewListener;
@@ -34,12 +38,13 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
     private void initView(View rootView) {
-//        recyclerView = (RecyclerView) rootView.findViewById(R.id.productlist_user_recyclerview);
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-//        recyclerView.setLayoutManager(gridLayoutManager);
-//        //send Query to FirebaseDatabase
-//        mFirebaseDatabase = FirebaseDatabase.getInstance();
-//        mRef = mFirebaseDatabase.getReference("Products");
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.productcategory_home_recyclerview);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        //send Query to FirebaseDatabase
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mRef = mFirebaseDatabase.getReference("ProductCategories");
+        //Set the carousel
         CarouselView carouselView = rootView.findViewById(R.id.carousel_view);
         carouselView.setSize(carouselImages.length);
         carouselView.setResource(R.layout.image_carousel_item);
@@ -61,38 +66,36 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//
-//        final FirebaseRecyclerOptions<AdminProductList> options =
-//                new FirebaseRecyclerOptions.Builder<AdminProductList>()
-//                        .setQuery(mRef, AdminProductList.class)
-//                        .build();
-//
-//        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AdminProductList, UserProductListViewHolder>(options) {
-//            @Override
-//            public UserProductListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.cardview_user_productlist, parent, false);
-//
-//                return new UserProductListViewHolder(view);
-//            }
-//            @Override
-//            protected void onBindViewHolder(UserProductListViewHolder holder, int position, AdminProductList model) {
-//                Log.d("GridView","Working 4");
-//                // Bind the image_details object to the BlogViewHolder
-//                holder.setDetails(getContext(), model.getProductName(), model.getProductCategory(), model.getProductSubCategory(),
-//                        model.getProductBrand(), model.getProductImageURL(), model.getMeasureIn(), model.getTotalWeightIn(), model.getItemWeightIn(), model.getMRPPricePerUnit(), model.getSellingPricePerUnit(), model.getTotalWeight(), model.getItemWeight(), model.getItemCount());
-//
-//            }
-//        };
-//
-//        //set adapter to recyclerview
-//        recyclerView.setAdapter(firebaseRecyclerAdapter);
-//        firebaseRecyclerAdapter.startListening();
+
+        final FirebaseRecyclerOptions<ProductCategory> options =
+                new FirebaseRecyclerOptions.Builder<ProductCategory>()
+                        .setQuery(mRef, ProductCategory.class)
+                        .build();
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ProductCategory, HomeProductCategoryListViewHolder>(options) {
+            @Override
+            public HomeProductCategoryListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.cardview_product_categorylist, parent, false);
+
+                return new HomeProductCategoryListViewHolder(view);
+            }
+            @Override
+            protected void onBindViewHolder(HomeProductCategoryListViewHolder holder, int position, ProductCategory model) {
+                Log.d("GridView","Product Category ");
+                // Bind the image_details object to the BlogViewHolder
+                holder.setDetails(getContext(), model.getCategoryImageURL(), model.getCategoryName());
+            }
+        };
+
+        //set adapter to recyclerview
+        recyclerView.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-       // firebaseRecyclerAdapter.stopListening();
+       firebaseRecyclerAdapter.stopListening();
     }
 }
