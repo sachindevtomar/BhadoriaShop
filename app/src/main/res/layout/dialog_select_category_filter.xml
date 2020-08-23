@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffffff"
+    android:layout_margin="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/title_select_category_dialog_textview"
+        android:gravity="center"
+        android:background="@color/colorGrey"
+        android:scaleType="fitCenter"
+        android:text="Select Category"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="#000000"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/select_category_dialog_recyclerview"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_select_category_dialog_textview"/>
+</RelativeLayout>

@@ -2,6 +2,7 @@ package com.grocery.bhadoriashop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
+import com.grocery.bhadoriashop.Helper.AddCategoryAdminDialog;
+import com.grocery.bhadoriashop.Helper.SelectCategoryDialog;
 import com.grocery.bhadoriashop.Models.AdminProductList;
 
 import es.dmoral.toasty.Toasty;
@@ -60,6 +63,9 @@ public class ShowAllProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toasty.success(getApplicationContext(), "Clicked worked", Toast.LENGTH_LONG, true).show();
+                FragmentManager fm = getSupportFragmentManager();
+                SelectCategoryDialog dialogFragment=new SelectCategoryDialog(getParent());
+                dialogFragment.show(fm, "dialog_fragment_select_category");
             }
         });
         return true;
