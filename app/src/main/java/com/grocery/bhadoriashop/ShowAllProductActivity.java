@@ -20,6 +20,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
 import com.grocery.bhadoriashop.Helper.AddCategoryAdminDialog;
 import com.grocery.bhadoriashop.Helper.SelectCategoryDialog;
@@ -71,19 +72,24 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     }
 
     @Override
-    public void onFinishEditDialog(String inputText) {
-        Toasty.success(getApplicationContext(), "Message From Dialog: "+inputText, Toast.LENGTH_LONG, true).show();
+    public void onFinishEditDialog(String selectedCategory) {
+        Toasty.success(getApplicationContext(), "Message From Dialog: "+selectedCategory, Toast.LENGTH_LONG, true).show();
+        filterProductsBasedOnCategory(selectedCategory);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        final FirebaseRecyclerOptions<AdminProductList> options =
-                new FirebaseRecyclerOptions.Builder<AdminProductList>()
-                        .setQuery(mRef, AdminProductList.class)
-                        .build();
-
+    private void filterProductsBasedOnCategory(String selectedcategory){
+        FirebaseRecyclerOptions<AdminProductList> options ;
+        if(selectedcategory.length()>0){
+            Query queryCategoryFilter = mRef.orderByChild("ProductCategory").equalTo(selectedcategory);
+            options = new FirebaseRecyclerOptions.Builder<AdminProductList>()
+                            .setQuery(queryCategoryFilter, AdminProductList.class)
+                            .build();
+        }
+        else {
+           options = new FirebaseRecyclerOptions.Builder<AdminProductList>()
+                            .setQuery(mRef, AdminProductList.class)
+                            .build();
+        }
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AdminProductList, UserProductListViewHolder>(options) {
             @Override
             public UserProductListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -104,6 +110,11 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         //set adapter to recyclerview
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        filterProductsBasedOnCategory("");
     }
 
     @Override
