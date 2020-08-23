@@ -56,18 +56,18 @@ import es.dmoral.toasty.Toasty;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class SelectCategoryDialog extends DialogFragment implements View.OnClickListener {
+public class SelectCategoryDialog extends DialogFragment {
 
-    public Activity parentActivity;
 
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
+    String existingFilterCategory;
 
-    public SelectCategoryDialog(Activity a) {
+    public SelectCategoryDialog(String existingFilterCategory) {
         // TODO Auto-generated constructor stub
-        this.parentActivity = a;
+        this.existingFilterCategory = existingFilterCategory;
     }
 
     public interface CategoryNameDialogListener {
@@ -84,23 +84,6 @@ public class SelectCategoryDialog extends DialogFragment implements View.OnClick
         View rootView = inflater.inflate(R.layout.dialog_select_category_filter, container, false);
         initViews(rootView);
         return rootView;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.add_category_admin_dialog_btn:
-
-                break;
-            case R.id.add_category_admin_dialog_image_btn:
-
-                break;
-            case R.id.category_image_admin_dialog_close_imgbtn:
-
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -133,7 +116,8 @@ public class SelectCategoryDialog extends DialogFragment implements View.OnClick
             @Override
             protected void onBindViewHolder(SelectCategoryListViewHolder holder, int position, ProductCategory model) {
                 // Bind the image_details object to the BlogViewHolder
-                holder.setDetails(getContext(), model.getCategoryImageURL(), model.getCategoryName());
+                Log.d("CheckColor", "green: "+existingFilterCategory);
+                holder.setDetails(getContext(), model.getCategoryImageURL(), model.getCategoryName(),existingFilterCategory);
             }
         };
 

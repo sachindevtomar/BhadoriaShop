@@ -1,11 +1,13 @@
 package com.grocery.bhadoriashop.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.grocery.bhadoriashop.Adapter.HomeProductCategoryListViewHolder;
 import com.grocery.bhadoriashop.Models.ProductCategory;
 import com.grocery.bhadoriashop.R;
+import com.grocery.bhadoriashop.ShowAllProductActivity;
 import com.jama.carouselview.CarouselView;
 import com.jama.carouselview.CarouselViewListener;
 import com.jama.carouselview.enums.IndicatorAnimationType;
@@ -77,7 +80,15 @@ public class HomeFragment extends Fragment {
             public HomeProductCategoryListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.cardview_product_categorylist, parent, false);
-
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView selectedCategoryTextView = v.findViewById(R.id.product_category_card_textview);
+                        Intent i=new Intent(getActivity(), ShowAllProductActivity.class);
+                        i.putExtra("filterCategory", selectedCategoryTextView.getText());
+                        startActivity(i);
+                    }
+                });
                 return new HomeProductCategoryListViewHolder(view);
             }
             @Override

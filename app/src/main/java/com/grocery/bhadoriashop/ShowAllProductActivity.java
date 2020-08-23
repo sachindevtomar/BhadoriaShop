@@ -33,6 +33,7 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
+    String currentSelectedCategoryFilter = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                SelectCategoryDialog dialogFragment=new SelectCategoryDialog(getParent());
+                SelectCategoryDialog dialogFragment=new SelectCategoryDialog(currentSelectedCategoryFilter);
                 dialogFragment.show(fm, "dialog_fragment_select_category");
             }
         });
@@ -74,7 +75,8 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     @Override
     public void onFinishEditDialog(String selectedCategory) {
         Toasty.success(getApplicationContext(), "Message From Dialog: "+selectedCategory, Toast.LENGTH_LONG, true).show();
-        filterProductsBasedOnCategory(selectedCategory);
+        currentSelectedCategoryFilter = selectedCategory;
+        filterProductsBasedOnCategory(currentSelectedCategoryFilter);
     }
 
     private void filterProductsBasedOnCategory(String selectedcategory){
@@ -114,7 +116,12 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     @Override
     public void onStart() {
         super.onStart();
-        filterProductsBasedOnCategory("");
+        if(getIntent().getStringExtra("filterCategory") !=null) {
+            currentSelectedCategoryFilter =getIntent().getStringExtra("filterCategory");
+            filterProductsBasedOnCategory(currentSelectedCategoryFilter);
+        }
+        else
+            filterProductsBasedOnCategory("");
     }
 
     @Override
