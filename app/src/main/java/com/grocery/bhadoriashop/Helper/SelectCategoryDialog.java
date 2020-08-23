@@ -106,7 +106,11 @@ public class SelectCategoryDialog extends DialogFragment {
                         if(v instanceof CardView) {
                             TextView selectedCategoryTextView = v.findViewById(R.id.select_category_card_textview);
                             CategoryNameDialogListener activity = (CategoryNameDialogListener) getActivity();
-                            activity.onFinishEditDialog(selectedCategoryTextView.getText().toString());
+                            //if same category is selected again then we show all products
+                            if(existingFilterCategory.equals(selectedCategoryTextView.getText().toString()))
+                                activity.onFinishEditDialog("");
+                            else
+                                activity.onFinishEditDialog(selectedCategoryTextView.getText().toString());
                             getDialog().dismiss();
                         }
                     }
