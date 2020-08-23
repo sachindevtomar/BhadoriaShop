@@ -6,11 +6,19 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".ShowAllProductActivity"
-android:background="@drawable/background_gradient_login">
-
-<!--RecyclerView-->
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/productlist_user_recyclerview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+android:background="@drawable/background_gradient_login"
+android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/show_all_product_toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/buttonCommonColor">
+    </androidx.appcompat.widget.Toolbar>
+    <!--RecyclerView-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productlist_user_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

@@ -26,7 +26,6 @@ import com.grocery.bhadoriashop.Fragments.AddProductFragment;
 import com.grocery.bhadoriashop.Fragments.ProductListFragment;
 import com.grocery.bhadoriashop.Helper.AddCategoryAdminDialog;
 
-import es.dmoral.toasty.Toasty;
 
 public class AdminTabbedActivity extends AppCompatActivity {
 

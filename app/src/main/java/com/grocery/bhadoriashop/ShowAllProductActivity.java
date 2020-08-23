@@ -1,14 +1,19 @@
 package com.grocery.bhadoriashop;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -16,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
 import com.grocery.bhadoriashop.Models.AdminProductList;
+
+import es.dmoral.toasty.Toasty;
 
 public class ShowAllProductActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -27,6 +34,8 @@ public class ShowAllProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all_product);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.show_all_product_toolbar);
+        setSupportActionBar(myToolbar);
         initView();
     }
 
@@ -38,6 +47,22 @@ public class ShowAllProductActivity extends AppCompatActivity {
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("Products");
+    }
+
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
+        // If you don't have res/menu, just create a directory named "menu" inside res
+        getMenuInflater().inflate(R.menu.product_filter_menu, menu);
+        //set onClickListener on that actionLayout to receive callback
+        menu.findItem(R.id.product_filter_menu_item).getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toasty.success(getApplicationContext(), "Clicked worked", Toast.LENGTH_LONG, true).show();
+            }
+        });
+        return true;
     }
 
     @Override
@@ -59,7 +84,6 @@ public class ShowAllProductActivity extends AppCompatActivity {
             }
             @Override
             protected void onBindViewHolder(UserProductListViewHolder holder, int position, AdminProductList model) {
-                Log.d("GridView","Working 4");
                 // Bind the image_details object to the BlogViewHolder
                 holder.setDetails(getApplicationContext(), model.getProductName(), model.getProductCategory(), model.getProductSubCategory(),
                         model.getProductBrand(), model.getProductImageURL(), model.getMeasureIn(), model.getTotalWeightIn(), model.getItemWeightIn(), model.getMRPPricePerUnit(), model.getSellingPricePerUnit(), model.getTotalWeight(), model.getItemWeight(), model.getItemCount());
