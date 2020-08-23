@@ -1,16 +1,21 @@
 package com.grocery.bhadoriashop.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.bhadoriashop.R;
 import com.squareup.picasso.Picasso;
 
-public class SelectCategoryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+import es.dmoral.toasty.Toasty;
+
+public class SelectCategoryListViewHolder extends RecyclerView.ViewHolder{
 
     View mView;
 
@@ -31,11 +36,5 @@ public class SelectCategoryListViewHolder extends RecyclerView.ViewHolder implem
         if(ProductCategoryImageURL != null && !ProductCategoryImageURL.isEmpty())
             Picasso.get().load(ProductCategoryImageURL).into(productCategoryImageURL);
     }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
 }
 

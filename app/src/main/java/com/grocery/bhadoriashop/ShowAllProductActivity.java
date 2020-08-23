@@ -27,7 +27,7 @@ import com.grocery.bhadoriashop.Models.AdminProductList;
 
 import es.dmoral.toasty.Toasty;
 
-public class ShowAllProductActivity extends AppCompatActivity {
+public class ShowAllProductActivity extends AppCompatActivity implements SelectCategoryDialog.CategoryNameDialogListener {
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
@@ -62,13 +62,17 @@ public class ShowAllProductActivity extends AppCompatActivity {
         menu.findItem(R.id.product_filter_menu_item).getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toasty.success(getApplicationContext(), "Clicked worked", Toast.LENGTH_LONG, true).show();
                 FragmentManager fm = getSupportFragmentManager();
                 SelectCategoryDialog dialogFragment=new SelectCategoryDialog(getParent());
                 dialogFragment.show(fm, "dialog_fragment_select_category");
             }
         });
         return true;
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        Toasty.success(getApplicationContext(), "Message From Dialog: "+inputText, Toast.LENGTH_LONG, true).show();
     }
 
     @Override

@@ -22,10 +22,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,7 +58,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SelectCategoryDialog extends DialogFragment implements View.OnClickListener {
 
-    public Activity c;
+    public Activity parentActivity;
 
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
@@ -65,7 +67,11 @@ public class SelectCategoryDialog extends DialogFragment implements View.OnClick
 
     public SelectCategoryDialog(Activity a) {
         // TODO Auto-generated constructor stub
-        this.c = a;
+        this.parentActivity = a;
+    }
+
+    public interface CategoryNameDialogListener {
+        void onFinishEditDialog(String inputText);
     }
 
     @Override
@@ -111,7 +117,17 @@ public class SelectCategoryDialog extends DialogFragment implements View.OnClick
             public SelectCategoryListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.cardview_select_categorylist, parent, false);
-
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(v instanceof CardView) {
+                            TextView selectedCategoryTextView = v.findViewById(R.id.select_category_card_textview);
+                            CategoryNameDialogListener activity = (CategoryNameDialogListener) getActivity();
+                            activity.onFinishEditDialog(selectedCategoryTextView.getText().toString());
+                            getDialog().dismiss();
+                        }
+                    }
+                });
                 return new SelectCategoryListViewHolder(view);
             }
             @Override
