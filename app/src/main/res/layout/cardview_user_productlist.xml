@@ -8,8 +8,8 @@
     app:cardElevation="3dp"
     app:contentPadding="5dp"
     app:cardUseCompatPadding="true"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+    android:layout_marginLeft="3dp"
+    android:layout_marginRight="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:id="@+id/product_name_usercard_textview"
             android:text="Product Name"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -35,61 +35,118 @@
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-                android:background="@drawable/ic_image_black_24dp"
-                android:layout_marginRight="10dp"/>
+                android:background="@drawable/ic_image_black_24dp"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:text="Price: "
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/product_price_usercard_textview"
-                    android:text="MRP"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/product_sp_usercard_textview"
+                android:text="Rs."
+                android:textColor="@color/red"
+                android:textSize="12sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_addcart_usercard_btn"
-                android:drawableLeft="@drawable/ic_shopping_cart_black_24dp"
-                android:text="Add"
-                android:minHeight="0dp"
-                android:minWidth="0dp">
+                android:textStyle="bold"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-            </Button>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/product_mrp_usercard_textview"
+                android:text="MRP."
+                android:textColor="@color/darkGrey"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/product_discount_usercard_textview"
+                android:text="OFF"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/green"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/product_weight_usercard_textview"
+                android:text="Weight"
+                android:textColor="@color/buttonCommonColorDark"
+                android:textSize="14sp"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/decrease_card_product_count_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:drawableStart="@drawable/ic_remove_white_24dp"
+                    android:background="@drawable/ripple_btn_background"/>
+
+                <EditText
+                    android:id="@+id/card_product_count_edittext"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:text="1"
+                    android:maxLength="1"
+                    android:textAlignment="center"/>
+                <Button
+                    android:id="@+id/increase_card_product_count_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:drawableStart="@drawable/ic_add_white_24dp"
+                    android:background="@drawable/ripple_btn_background"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/product_buy_usercard_btn"
-                android:drawableLeft="@drawable/ic_account_balance_wallet_black_24dp"
-                android:text="Buy"
-                android:minHeight="0dp"
-                android:minWidth="0dp">
-
+                android:id="@+id/product_addcart_usercard_btn"
+                android:drawableLeft="@drawable/ic_shopping_cart_white_24dp"
+                android:text="Add"
+                android:textColor="@color/white"
+                android:background="@drawable/ripple_btn_background"
+                android:padding="5dp"
+                android:minHeight="0dp">
             </Button>
         </LinearLayout>
     </LinearLayout>

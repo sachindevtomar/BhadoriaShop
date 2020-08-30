@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorGrey">#DBDBDB</color>
+    <color name="darkGrey">#959595</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
     <color name="backgroundLogin">#333333</color>
     <color name="buttonCommonColor">#009a9a</color>
     <color name="buttonCommonColorDark">#FF0D7A7A</color>
