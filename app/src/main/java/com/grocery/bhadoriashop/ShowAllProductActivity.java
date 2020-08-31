@@ -2,6 +2,8 @@ package com.grocery.bhadoriashop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -60,13 +64,35 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
         // If you don't have res/menu, just create a directory named "menu" inside res
         getMenuInflater().inflate(R.menu.product_filter_menu, menu);
+        //find the filter menu item
+        MenuItem filterMenuItem = menu.findItem(R.id.product_filter_menu_item);
         //set onClickListener on that actionLayout to receive callback
-        menu.findItem(R.id.product_filter_menu_item).getActionView().setOnClickListener(new View.OnClickListener() {
+        filterMenuItem.getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
                 SelectCategoryDialog dialogFragment=new SelectCategoryDialog(currentSelectedCategoryFilter);
                 dialogFragment.show(fm, "dialog_fragment_select_category");
+            }
+        });
+
+        //find the search menu item
+        MenuItem searchMenuItem = menu.findItem(R.id.product_search_menu_item);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //firebaseSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Filter as you type
+                //firebaseSearch(newText);
+                Log.d("searchquery","testing");
+                return false;
             }
         });
         return true;

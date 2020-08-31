@@ -139,7 +139,8 @@
                     android:id="@+id/wtltr_measure_radiobtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Wt/Ltr"/>
+                    android:text="Wt/Ltr"
+                    android:enabled="false"/>
                 <RadioButton
                     android:id="@+id/na_measure_radiobtn"
                     android:layout_width="wrap_content"

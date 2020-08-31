@@ -14,15 +14,6 @@
         <item name="colorPrimaryDark">@color/buttonCommonColorDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-<!--    <style name="ActionButton" parent="@android:style/Widget.ActionButton">-->
-<!--        <item name="android:layout_marginRight">20dp</item>-->
-<!--    </style>-->
-<!--    <style name="FilterToolBarTheme"-->
-<!--        parent="Theme.AppCompat.Light.NoActionBar">-->
-<!--        &lt;!&ndash; other styles &ndash;&gt;-->
-
-<!--        <item name="android:actionButtonStyle">@style/ActionButton</item>-->
-<!--    </style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
