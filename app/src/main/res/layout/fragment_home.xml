@@ -39,14 +39,37 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="10dp"
-        android:background="@color/buttonCommonColorLight">
-        <TextView
+        android:background="@drawable/shadow_background_light">
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categories"
-            android:textSize="18dp"
-            android:textColor="@color/black"
-            android:gravity="center_horizontal"/>
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"/>
+            <Button
+                android:id="@+id/view_all_product_home_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View All"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ripple_btn2_background"
+                android:textColor="@color/white"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="5dp"></Button>
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/buttonCommonColorDark"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productcategory_home_recyclerview"
             android:layout_width="match_parent"

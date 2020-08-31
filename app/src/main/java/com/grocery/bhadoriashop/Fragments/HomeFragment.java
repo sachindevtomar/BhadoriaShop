@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment {
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
+    Button viewAllProductBtn;
     private int[] carouselImages = {R.drawable.carousel_image1,
             R.drawable.carousel_image2, R.drawable.carousel_image3};
 
@@ -64,6 +66,16 @@ public class HomeFragment extends Fragment {
         });
         // After you finish setting up, show the CarouselView
         carouselView.show();
+
+        viewAllProductBtn = (Button) rootView.findViewById(R.id.view_all_product_home_btn);
+        viewAllProductBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open show product activity with view all filter which is empty string
+                Intent i=new Intent(getActivity(), ShowAllProductActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
