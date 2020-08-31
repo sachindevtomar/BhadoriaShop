@@ -28,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,6 +65,7 @@ public class SelectCategoryDialog extends DialogFragment {
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
     String existingFilterCategory;
+    Button allCategoryBtn;
 
     public SelectCategoryDialog(String existingFilterCategory) {
         // TODO Auto-generated constructor stub
@@ -120,7 +122,6 @@ public class SelectCategoryDialog extends DialogFragment {
             @Override
             protected void onBindViewHolder(SelectCategoryListViewHolder holder, int position, ProductCategory model) {
                 // Bind the image_details object to the BlogViewHolder
-                Log.d("CheckColor", "green: "+existingFilterCategory);
                 holder.setDetails(getContext(), model.getCategoryImageURL(), model.getCategoryName(),existingFilterCategory);
             }
         };
@@ -143,5 +144,22 @@ public class SelectCategoryDialog extends DialogFragment {
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("ProductCategories");
+        allCategoryBtn = (Button) v.findViewById(R.id.select_category_all_btn_dialog);
+        //check if existing selected category is empty string then choose All as the select category dialog box
+        if(existingFilterCategory.isEmpty()){
+            allCategoryBtn.setBackgroundColor(ContextCompat.getColor(getContext(),
+                    R.color.buttonCommonColorDark));
+            allCategoryBtn.setTextColor(ContextCompat.getColor(getContext(),
+                    R.color.white));
+        }
+
+        allCategoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryNameDialogListener activity = (CategoryNameDialogListener) getActivity();
+                activity.onFinishEditDialog("");
+                getDialog().dismiss();
+            }
+        });
     }
 }

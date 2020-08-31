@@ -34,18 +34,18 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
     String currentSelectedCategoryFilter = "";
+    Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all_product);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.show_all_product_toolbar);
-        setSupportActionBar(myToolbar);
         initView();
     }
 
 
     private void initView() {
+        myToolbar = (Toolbar) findViewById(R.id.show_all_product_toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.productlist_user_recyclerview);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -74,8 +74,13 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
 
     @Override
     public void onFinishEditDialog(String selectedCategory) {
-        Toasty.success(getApplicationContext(), "Message From Dialog: "+selectedCategory, Toast.LENGTH_LONG, true).show();
+        //Toasty.success(getApplicationContext(), "Message From Dialog: "+selectedCategory, Toast.LENGTH_LONG, true).show();
         currentSelectedCategoryFilter = selectedCategory;
+        if(currentSelectedCategoryFilter==null || currentSelectedCategoryFilter.isEmpty())
+            myToolbar.setTitle("All");
+        else
+            myToolbar.setTitle(currentSelectedCategoryFilter);
+        setSupportActionBar(myToolbar);
         filterProductsBasedOnCategory(currentSelectedCategoryFilter);
     }
 
@@ -118,10 +123,14 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         super.onStart();
         if(getIntent().getStringExtra("filterCategory") !=null) {
             currentSelectedCategoryFilter =getIntent().getStringExtra("filterCategory");
+            myToolbar.setTitle(currentSelectedCategoryFilter);
             filterProductsBasedOnCategory(currentSelectedCategoryFilter);
         }
-        else
+        else {
+            myToolbar.setTitle("All");
             filterProductsBasedOnCategory("");
+        }
+        setSupportActionBar(myToolbar);
     }
 
     @Override

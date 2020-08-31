@@ -7,9 +7,9 @@
     android:layout_margin="20dp">
 
     <TextView
+        android:id="@+id/title_select_category_dialog_textview"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:id="@+id/title_select_category_dialog_textview"
         android:gravity="center"
         android:background="@color/colorGrey"
         android:scaleType="fitCenter"
@@ -18,10 +18,20 @@
         android:textStyle="bold"
         android:textColor="#000000"/>
 
+    <Button
+        android:layout_marginTop="10dp"
+        android:id="@+id/select_category_all_btn_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_select_category_dialog_textview"
+        android:layout_centerInParent="true"
+        android:background="@color/buttonCommonColorLight"
+        android:text="All"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/select_category_dialog_recyclerview"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_select_category_dialog_textview"/>
+        android:layout_below="@id/select_category_all_btn_dialog"/>
 </RelativeLayout>
