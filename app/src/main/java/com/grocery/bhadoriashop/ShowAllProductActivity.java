@@ -135,7 +135,7 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
             protected void onBindViewHolder(UserProductListViewHolder holder, int position, AdminProductList model) {
                 // Bind the image_details object to the BlogViewHolder
                 holder.setDetails(getApplicationContext(), model.getProductName(), model.getProductCategory(), model.getProductSubCategory(),
-                        model.getProductBrand(), model.getProductImageURL(), model.getMeasureIn(), model.getTotalWeightIn(), model.getItemWeightIn(), model.getMRPPricePerUnit(), model.getSellingPricePerUnit(), model.getTotalWeight(), model.getItemWeight(), model.getItemCount());
+                        model.getProductBrand(), model.getProductImageURL(), model.getMeasureIn(), model.getTotalWeightIn(), model.getItemWeightIn(), model.getMRPPricePerUnit(), model.getSellingPricePerUnit(), model.getTotalWeight(), model.getItemWeight(), model.getItemCount(),firebaseRecyclerAdapter.getRef(position).getKey());
 
             }
         };

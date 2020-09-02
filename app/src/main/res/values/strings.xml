@@ -19,6 +19,9 @@
     <string name="category_saved_without_image">Category is saved without image</string>
     <string name="category_saved_with_image">Category is saved with image</string>
     <string name="failed_to_save_category">Failed to save category. Please try again</string>
+    <string name="login_required">Login is required</string>
+    <string name="item_added_cart">Item is Added</string>
+    <string name="unable_add_item_cart">Unable to add item in the cart</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>

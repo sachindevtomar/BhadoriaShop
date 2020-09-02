@@ -10,12 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.grocery.bhadoriashop.Adapter.HomeProductCategoryListViewHolder;
@@ -105,7 +108,18 @@ public class HomeFragment extends Fragment {
             }
             @Override
             protected void onBindViewHolder(HomeProductCategoryListViewHolder holder, int position, ProductCategory model) {
-                Log.d("GridView","Product Category ");
+
+//                Code for removing card items (but it will remove value from db also)
+//                if(model.getCategoryImageURL().isEmpty()) {
+//                    firebaseRecyclerAdapter.getRef(position).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if (task.isSuccessful()){
+//                                firebaseRecyclerAdapter.notifyDataSetChanged();
+//                            }
+//                        }
+//                    });
+//                }
                 // Bind the image_details object to the BlogViewHolder
                 holder.setDetails(getContext(), model.getCategoryImageURL(), model.getCategoryName());
             }
