@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 />
             <TextView
-                android:id="@+id/total_cart_amount"
+                android:id="@+id/total_cart_amount_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TotalAmount"
@@ -71,7 +71,7 @@
                 android:layout_weight="1"
                 />
             <TextView
-                android:id="@+id/delivery_cart_amount"
+                android:id="@+id/delivery_cart_amount_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DeliveryAmount"
@@ -83,17 +83,17 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/buttonCommonColorDark"
-            android:layout_margin="10dp"/>
+            android:layout_marginTop="20dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total payable"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/buttonCommonColorDark"
                 android:textStyle="bold"
                 android:textSize="16dp"/>
@@ -103,12 +103,11 @@
                 android:layout_weight="1"
                 />
             <TextView
-                android:id="@+id/total_payable_cart_amount"
+                android:id="@+id/total_payable_cart_amount_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PayableAmount"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/buttonCommonColorDark"
                 android:textStyle="bold"
@@ -120,6 +119,7 @@
         android:id="@+id/checkout_products_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="Checkout"
         android:layout_below="@+id/price_calculation_linearlayout"
         android:layout_centerInParent="true"

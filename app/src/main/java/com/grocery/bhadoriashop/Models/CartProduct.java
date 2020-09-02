@@ -17,6 +17,7 @@ public class CartProduct {
         ProductImageURL = productImageURL;
         ProductSellingPrice = productSellingPrice;
     }
+    public CartProduct() {}
 
     private int ItemCount;
     private long CreatedDateEPoch;
