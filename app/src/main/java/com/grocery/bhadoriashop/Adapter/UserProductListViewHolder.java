@@ -24,8 +24,8 @@ import es.dmoral.toasty.Toasty;
 public class UserProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     View mView;
-    String ObjectKey, ProductName, ItemWeightIn;
-    double ItemWeight;
+    String ObjectKey, ProductName, ItemWeightIn, ProductImageURL;
+    double ItemWeight, ProductSellingPrice;
     DatabaseReference mDatabaseCart = FirebaseDatabase.getInstance().getReference("ProductCart");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     int currentCartItemCount = 1;
@@ -39,7 +39,7 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
     }
 
     //set details to recycler view row
-    public void setDetails(Context ctx, String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String ProductImageURL, String MeasureIn, String TotalWeightIn, String ItemWeightIn, double MRPPricePerUnit, double SellingPricePerUnit, double TotalWeight, double ItemWeight, int ItemCount, String ObjectKey ){
+    public void setDetails(Context ctx, String ProductName, String ProductCategory, String ProductSubCategory, String ProductBrand, String ProductImageURL, String MeasureIn, String TotalWeightIn, String ItemWeightIn, double MRPPricePerUnit, double SellingPrice, double TotalWeight, double ItemWeight, int ItemCount, String ObjectKey ){
         //Views
         TextView productNameTextView = mView.findViewById(R.id.product_name_usercard_textview);
         ImageView productImageView = mView.findViewById(R.id.product_image_usercard_imageview);
@@ -55,10 +55,10 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
         addCartBtn.setOnClickListener(this);
         //set data to views
         productNameTextView.setText(ProductName + " : " + ProductBrand);
-        productSPTextView.setText("Rs."+String.valueOf(SellingPricePerUnit));
+        productSPTextView.setText("Rs."+String.valueOf(SellingPrice));
         productMRPTextView.setText("MRP."+String.valueOf(MRPPricePerUnit));
         productMRPTextView.setPaintFlags(productMRPTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        int discount = (int)(((MRPPricePerUnit - SellingPricePerUnit)/MRPPricePerUnit)*100);
+        int discount = (int)(((MRPPricePerUnit - SellingPrice)/MRPPricePerUnit)*100);
         productDiscountTextView.setText(String.valueOf(discount)+"% OFF");
         productWeightTextView.setText(String.valueOf(ItemWeight) + " " + ItemWeightIn);
         Picasso.get().load(ProductImageURL).into(productImageView);
@@ -70,6 +70,8 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
         productCardCountEditText = mView.findViewById(R.id.card_product_count_edittext);
         this.currentCartItemCount = Integer.parseInt(productCardCountEditText.getText().toString());
         this.ctx = ctx;
+        this.ProductImageURL = ProductImageURL;
+        this.ProductSellingPrice = SellingPrice;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
                     break;
                 }
                 try {
-                    CartProduct saveCartItem = new CartProduct(this.ProductName, this.ItemWeight, this.ItemWeightIn, this.ObjectKey, currentCartItemCount, System.currentTimeMillis());
+                    CartProduct saveCartItem = new CartProduct(this.ProductName, this.ItemWeight, this.ItemWeightIn, this.ObjectKey, currentCartItemCount, System.currentTimeMillis(), this.ProductImageURL, this.ProductSellingPrice);
                     mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).push().setValue(saveCartItem);
                     Toasty.success(this.ctx, R.string.item_added_cart, Toast.LENGTH_LONG, true).show();
                 }

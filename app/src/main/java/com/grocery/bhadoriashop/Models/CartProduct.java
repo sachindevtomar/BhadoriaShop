@@ -3,6 +3,42 @@ package com.grocery.bhadoriashop.Models;
 public class CartProduct {
     //We are using logged in userid as the object key in firebase database
     private String ProductName;
+    private double Quantity;
+    private String QuantityIn;
+    private String ProductObjectKey;
+
+    public CartProduct(String productName, double quantity, String quantityIn, String productObjectKey, int itemCount, long createdDateEPoch, String productImageURL, double productSellingPrice) {
+        ProductName = productName;
+        Quantity = quantity;
+        QuantityIn = quantityIn;
+        ProductObjectKey = productObjectKey;
+        ItemCount = itemCount;
+        CreatedDateEPoch = createdDateEPoch;
+        ProductImageURL = productImageURL;
+        ProductSellingPrice = productSellingPrice;
+    }
+
+    private int ItemCount;
+    private long CreatedDateEPoch;
+
+    public String getProductImageURL() {
+        return ProductImageURL;
+    }
+
+    public void setProductImageURL(String productImageURL) {
+        ProductImageURL = productImageURL;
+    }
+
+    public double getProductSellingPrice() {
+        return ProductSellingPrice;
+    }
+
+    public void setProductSellingPrice(double productSellingPrice) {
+        ProductSellingPrice = productSellingPrice;
+    }
+
+    private String ProductImageURL;
+    private double ProductSellingPrice;
 
     public String getProductName() {
         return ProductName;
@@ -52,19 +88,4 @@ public class CartProduct {
         CreatedDateEPoch = createdDateEPoch;
     }
 
-    private double Quantity;
-    private String QuantityIn;
-    private String ProductObjectKey;
-    private int ItemCount;
-
-    public CartProduct(String productName, double quantity, String quantityIn, String productObjectKey, int itemCount, long createdDateEPoch) {
-        ProductName = productName;
-        Quantity = quantity;
-        QuantityIn = quantityIn;
-        ProductObjectKey = productObjectKey;
-        ItemCount = itemCount;
-        CreatedDateEPoch = createdDateEPoch;
-    }
-
-    private long CreatedDateEPoch;
 }
