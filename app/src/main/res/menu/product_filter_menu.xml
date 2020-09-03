@@ -8,6 +8,12 @@
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
     <item
+        android:id="@+id/product_cart_menu_item"
+        android:title="Cart"
+        app:showAsAction="always"
+        app:actionLayout="@layout/menu_item_helper_cart"
+        />
+    <item
         android:id="@+id/product_filter_menu_item"
         android:title="Filter"
         app:showAsAction="always"
