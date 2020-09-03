@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +48,8 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
         TextView productSPTextView = mView.findViewById(R.id.product_sp_usercard_textview);
         TextView productDiscountTextView = mView.findViewById(R.id.product_discount_usercard_textview);
         TextView productWeightTextView = mView.findViewById(R.id.product_weight_usercard_textview);
-        Button decreaseCardItemBtn = mView.findViewById(R.id.decrease_card_product_count_btn);
-        Button increaseCardItemBtn = mView.findViewById(R.id.increase_card_product_count_btn);
+        ImageButton decreaseCardItemBtn = mView.findViewById(R.id.decrease_card_product_count_btn);
+        ImageButton increaseCardItemBtn = mView.findViewById(R.id.increase_card_product_count_btn);
         Button addCartBtn = mView.findViewById(R.id.product_addcart_usercard_btn);
         decreaseCardItemBtn.setOnClickListener(this);
         increaseCardItemBtn.setOnClickListener(this);

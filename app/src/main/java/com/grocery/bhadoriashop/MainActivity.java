@@ -1,11 +1,16 @@
 package com.grocery.bhadoriashop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -13,16 +18,25 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.grocery.bhadoriashop.Fragments.HomeFragment;
 import com.grocery.bhadoriashop.Fragments.LoginFragment;
 import com.grocery.bhadoriashop.Fragments.RefundPolicyFragment;
 import com.grocery.bhadoriashop.Fragments.ProfileFragment;
+import com.grocery.bhadoriashop.Helper.SelectCategoryDialog;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
@@ -33,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentTransaction fragmentTransaction;
     MenuItem logOutMenuItem, loginMenuItem;
     private boolean ShowLoginMenuItem=false;
+    TextView menuCartCountTextView;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference mRefCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             ShowLoginMenuItem = true;
         }
+
+        //send Query to FirebaseDatabase
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mRefCart = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
     }
 
     @Override
@@ -73,7 +95,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().findItem(R.id.login_menu).setVisible(ShowLoginMenuItem);
         navigationView.getMenu().findItem(R.id.logout_menu).setVisible(!ShowLoginMenuItem);
 
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.user_main_menu, menu);
+        //get cart icon with number of items in the cart
+        RelativeLayout customCartWithCountLayout = (RelativeLayout) menu.findItem(R.id.product_cart_menu_item).getActionView();
+        menuCartCountTextView = (TextView) customCartWithCountLayout.findViewById(R.id.menu_item_cart_count_textview);
+        mRefCart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //add listener on the cart icon
+        customCartWithCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(firebaseAuth.getCurrentUser() != null && !menuCartCountTextView.getText().toString().isEmpty() && !menuCartCountTextView.getText().toString().equals("0")) {
+                    Intent i = new Intent(getApplicationContext(), UserCartActivity.class);
+                    startActivity(i);
+                }
+                else{
+                    Toasty.error(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG, true).show();
+                }
+            }
+        });
+
+        return true;
     }
 
     @Override

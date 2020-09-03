@@ -89,7 +89,7 @@
                 android:text="Weight"
                 android:textColor="@color/buttonCommonColorDark"
                 android:textSize="14sp"
-                android:layout_width="50dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"/>
             <View
@@ -101,31 +101,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <Button
+                <ImageButton
                     android:id="@+id/decrease_card_product_count_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:drawableStart="@drawable/ic_remove_white_24dp"
-                    android:background="@drawable/ripple_btn_background"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_remove_white_24dp"
+                    android:background="@drawable/ripple_btn2_background"/>
 
                 <EditText
                     android:id="@+id/card_product_count_edittext"
-                    android:layout_width="50dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:text="1"
                     android:maxLength="1"
                     android:textAlignment="center"/>
-                <Button
+                <ImageButton
+                    android:layout_gravity="center_vertical"
                     android:id="@+id/increase_card_product_count_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:drawableStart="@drawable/ic_add_white_24dp"
-                    android:background="@drawable/ripple_btn_background"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_add_white_24dp"
+                    android:background="@drawable/ripple_btn2_background"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -145,7 +143,9 @@
                 android:text="Add"
                 android:textColor="@color/white"
                 android:background="@drawable/ripple_btn_background"
-                android:padding="5dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:minHeight="0dp">
             </Button>
         </LinearLayout>
