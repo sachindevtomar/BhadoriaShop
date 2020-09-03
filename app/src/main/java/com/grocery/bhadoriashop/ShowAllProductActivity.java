@@ -1,5 +1,6 @@
 package com.grocery.bhadoriashop;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,14 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
 import com.grocery.bhadoriashop.Helper.AddCategoryAdminDialog;
 import com.grocery.bhadoriashop.Helper.SelectCategoryDialog;
@@ -36,9 +44,11 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
-    DatabaseReference mRef;
+    DatabaseReference mRef, mRefCart;
     String currentSelectedCategoryFilter = "";
     Toolbar myToolbar;
+    TextView menuCartCountTextView;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,7 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("Products");
+        mRefCart = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
     }
 
     // create an action bar button
@@ -73,6 +84,37 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
                 FragmentManager fm = getSupportFragmentManager();
                 SelectCategoryDialog dialogFragment=new SelectCategoryDialog(currentSelectedCategoryFilter);
                 dialogFragment.show(fm, "dialog_fragment_select_category");
+            }
+        });
+
+        //get cart icon with number of items in the cart
+        RelativeLayout customCartWithCountLayout = (RelativeLayout) menu.findItem(R.id.product_cart_menu_item).getActionView();
+        menuCartCountTextView = (TextView) customCartWithCountLayout.findViewById(R.id.menu_item_cart_count_textview);
+        mRefCart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //add listener on the cart icon
+        customCartWithCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(firebaseAuth.getCurrentUser() != null && !menuCartCountTextView.getText().toString().isEmpty() && !menuCartCountTextView.getText().toString().equals("0")) {
+                    Intent i = new Intent(getApplicationContext(), UserCartActivity.class);
+                    startActivity(i);
+                }
+                else{
+                    Toasty.error(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG, true).show();
+                }
             }
         });
 

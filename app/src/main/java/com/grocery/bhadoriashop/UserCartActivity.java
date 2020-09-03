@@ -89,7 +89,7 @@ public class UserCartActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot childDataSnapShot : snapshot.getChildren()){
                         CartProduct cartItem = childDataSnapShot.getValue(CartProduct.class);
-                        totalCartAmount += cartItem.getProductSellingPrice();
+                        totalCartAmount += (cartItem.getProductSellingPrice()*cartItem.getItemCount());
                     }
                     //set TextViews values
                     totalAmountTextView.setText("Rs."+String.valueOf(totalCartAmount));
