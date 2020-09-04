@@ -50,7 +50,10 @@ public class AdminProductListViewHolder extends RecyclerView.ViewHolder implemen
         else{
 
         }
-        Picasso.get().load(ProductImageURL).into(productImageView);
+        if(ProductImageURL !=null && !ProductImageURL.isEmpty()) {
+            productImageView.setBackgroundResource(0);
+            Picasso.get().load(ProductImageURL).into(productImageView);
+        }
     }
 
     @Override

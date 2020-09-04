@@ -62,7 +62,11 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
         int discount = (int)(((MRPPricePerUnit - SellingPrice)/MRPPricePerUnit)*100);
         productDiscountTextView.setText(String.valueOf(discount)+"% OFF");
         productWeightTextView.setText(String.valueOf(ItemWeight) + " " + ItemWeightIn);
-        Picasso.get().load(ProductImageURL).into(productImageView);
+        //Set product image
+        if(ProductImageURL !=null && !ProductImageURL.isEmpty()) {
+            productImageView.setBackgroundResource(0);
+            Picasso.get().load(ProductImageURL).into(productImageView);
+        }
 
         this.ObjectKey = ObjectKey;
         this.ProductName = ProductName;
