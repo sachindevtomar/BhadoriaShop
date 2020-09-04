@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,14 @@ import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
 import com.grocery.bhadoriashop.Models.AdminProductList;
 import com.grocery.bhadoriashop.Models.CartProduct;
 
-public class UserCartActivity extends AppCompatActivity {
+public class UserCartActivity extends AppCompatActivity implements OnCustomDeleteCartItemListener{
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRef;
     TextView totalAmountTextView, totalPayableAmountTextView, deliveryAmountTextView;
     double totalCartAmount = 0;
+    Context currentActivityCtx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,26 @@ public class UserCartActivity extends AppCompatActivity {
         mRef = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateTotalAmountOnUIAfterCartModification();
+        fetchDataForRecyclerView();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        firebaseRecyclerAdapter.stopListening();
+    }
+
+    @Override
+    public void onCartItemDeleted() {
+        updateTotalAmountOnUIAfterCartModification();
+    }
+
     private void fetchDataForRecyclerView(){
+        currentActivityCtx = this;
         FirebaseRecyclerOptions<CartProduct> options ;
         options = new FirebaseRecyclerOptions.Builder<CartProduct>()
                 .setQuery(mRef, CartProduct.class)
@@ -70,8 +91,7 @@ public class UserCartActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(CartProductListViewHolder holder, int position, CartProduct model) {
                 // Bind the image_details object to the BlogViewHolder
-                holder.setDetails(getApplicationContext(), model.getProductName(), model.getProductImageURL(), model.getProductSellingPrice(), model.getQuantity(), model.getQuantityIn(), model.getItemCount());
-
+                holder.setDetails(getApplicationContext(), model.getProductName(), model.getProductImageURL(), model.getProductSellingPrice(), model.getQuantity(), model.getQuantityIn(), model.getItemCount(), firebaseRecyclerAdapter.getRef(position).getKey(), currentActivityCtx);
             }
         };
 
@@ -79,10 +99,10 @@ public class UserCartActivity extends AppCompatActivity {
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
     }
-    @Override
-    public void onStart() {
-        super.onStart();
+
+    private void updateTotalAmountOnUIAfterCartModification(){
         totalCartAmount = 0;
+        totalPayableAmountTextView.setText("Rs."+String.valueOf(totalCartAmount + 50)+"/-");
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -103,12 +123,5 @@ public class UserCartActivity extends AppCompatActivity {
 
             }
         });
-        fetchDataForRecyclerView();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        firebaseRecyclerAdapter.stopListening();
     }
 }
