@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     MenuItem logOutMenuItem, loginMenuItem;
-    private boolean ShowLoginMenuItem=false;
     TextView menuCartCountTextView;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase mFirebaseDatabase;
@@ -77,12 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Show/hide the login/logout menu item from navigation drawer
         logOutMenuItem = navigationView.getMenu().findItem(R.id.logout_menu);
         loginMenuItem = navigationView.getMenu().findItem(R.id.login_menu);
-        if(FirebaseAuth.getInstance().getCurrentUser()!= null) {
-            ShowLoginMenuItem = false;
-        }
-        else {
-            ShowLoginMenuItem = true;
-        }
 
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -92,8 +85,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        navigationView.getMenu().findItem(R.id.login_menu).setVisible(ShowLoginMenuItem);
-        navigationView.getMenu().findItem(R.id.logout_menu).setVisible(!ShowLoginMenuItem);
+        if(FirebaseAuth.getInstance().getCurrentUser()!= null) {
+            //User is logged in
+            navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
+            navigationView.getMenu().findItem(R.id.update_profile_menu).setVisible(true);
+            navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
+        }
+        else {
+            //user is not logged in
+            navigationView.getMenu().findItem(R.id.login_menu).setVisible(true);
+            navigationView.getMenu().findItem(R.id.update_profile_menu).setVisible(false);
+            navigationView.getMenu().findItem(R.id.logout_menu).setVisible(false);
+        }
+        invalidateOptionsMenu();
 
         getMenuInflater().inflate(R.menu.user_main_menu, menu);
         //get cart icon with number of items in the cart
@@ -155,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.commit();
                 break;
 
-            case R.id.profile_menu :
+            case R.id.update_profile_menu :
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.container_fragment, new ProfileFragment());
@@ -164,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.logout_menu :
                 FirebaseAuth.getInstance().signOut();
-                ShowLoginMenuItem = true;
                 invalidateOptionsMenu();
                 break;
 

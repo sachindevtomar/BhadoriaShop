@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:color="@color/buttonCommonColorDark">
-    <item>
+    android:layout_width="match_parent">
+    <item
+        android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/darkGrey" />
             <corners android:radius="5dp" />
         </shape>
     </item>
-
-    <item>
+    <item
+        android:state_pressed="true">
         <shape android:shape="rectangle">
-            <gradient
-                android:angle="90"
-                android:endColor="@color/buttonCommonColor"
-                android:startColor="@color/buttonCommonColor"
-                android:type="linear" />
+            <solid android:color="@color/buttonCommonColorDark" />
             <corners android:radius="5dp" />
         </shape>
     </item>
-</ripple>
+    <item
+        android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/buttonCommonColor" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+</selector>

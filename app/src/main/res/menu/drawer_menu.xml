@@ -21,7 +21,7 @@
             <item
                 android:icon="@drawable/ic_person_add_black_24dp"
                 android:title="Update Profile"
-                android:id="@+id/profile_menu"/>
+                android:id="@+id/update_profile_menu"/>
             <item
                 android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="Log Out"

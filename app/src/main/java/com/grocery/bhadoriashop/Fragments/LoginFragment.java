@@ -7,12 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,50 +42,15 @@ public class LoginFragment extends Fragment {
     ProgressBar loadingOTPProgressBar;
     String verificationId;
     PhoneAuthProvider.ForceResendingToken forceToken;
+    LinearLayout otpSectionLinearLayout;
+    PhoneAuthCredential phoneAuthCredentialGlobal;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        //Initializing objects
-        firebaseAuth = FirebaseAuth.getInstance();
-        phoneEditText = rootView.findViewById(R.id.phone_login_edittext);
-        otpEditText = rootView.findViewById(R.id.otp_login_edittext);
-        countryCodePicker = rootView.findViewById(R.id.country_code_picker);
-        sendOTPBtn = rootView.findViewById(R.id.sendotp_login_btn);
-        loginBtn = rootView.findViewById(R.id.login_login_btn);
-        loadingOTPProgressBar = rootView.findViewById(R.id.sendotp_login_progressbar);
-
-        sendOTPBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!phoneEditText.getText().toString().isEmpty() && phoneEditText.getText().toString().length() == 10){
-                    String completePhoneNumber =  countryCodePicker.getSelectedCountryCodeWithPlus()+phoneEditText.getText().toString();
-                    Log.d("TAG","OnClick: Phone No -> "+completePhoneNumber);
-                    loadingOTPProgressBar.setVisibility(View.VISIBLE);
-                    sendOTPBtn.setVisibility(View.GONE);
-                    requestOTP(completePhoneNumber);
-                }
-                else{
-                    Toast.makeText(getContext(), R.string.EnterValidPhoneNumber, Toast.LENGTH_LONG);
-                }
-            }
-        });
-
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String otpEntered = otpEditText.getText().toString();
-                if(!otpEntered.isEmpty() && otpEntered.length() == 6){
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otpEntered);
-                    verifyAuth(credential);
-                }
-                else{
-                    Toast.makeText(getContext(), R.string.EnterTheOTP, Toast.LENGTH_LONG);
-                }
-            }
-        });
-
+        initView(rootView);
+        addListeners(rootView);
         return rootView;
     }
 
@@ -92,10 +61,11 @@ public class LoginFragment extends Fragment {
                 super.onCodeSent(s, forceResendingToken);
                 verificationId = s;
                 forceToken = forceResendingToken;
-                Log.d("TAG","OTP is received");
+                Log.d("TAG","Request is sent to firebase");
+                //Enable the Login button once code is sent for otp to firebase
                 loginBtn.setEnabled(true);
                 loadingOTPProgressBar.setVisibility(View.GONE);
-
+                otpSectionLinearLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -106,9 +76,17 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                Log.d("TAG","Auth is done in the OnVerificationCompleted Method");
+                Log.d("TAG","OTP is received");
+                phoneAuthCredentialGlobal = phoneAuthCredential;
                 otpEditText.setText(phoneAuthCredential.getSmsCode());
-                verifyAuth(phoneAuthCredential);
+                //Added handler to wait for 5 sec to see the functionality of auto retrieval of SMS OTP
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        verifyAuth(phoneAuthCredentialGlobal);
+                    }
+                }, 5000);
                 loadingOTPProgressBar.setVisibility(View.GONE);
             }
 
@@ -139,6 +117,67 @@ public class LoginFragment extends Fragment {
                 }
                 else {
                     Log.d("TAG","Reached to verify auth Failure");
+                }
+            }
+        });
+    }
+
+    private void initView(View rootView){
+        //Initializing objects
+        firebaseAuth = FirebaseAuth.getInstance();
+        phoneEditText = rootView.findViewById(R.id.phone_login_edittext);
+        otpEditText = rootView.findViewById(R.id.otp_login_edittext);
+        countryCodePicker = rootView.findViewById(R.id.country_code_picker);
+        sendOTPBtn = rootView.findViewById(R.id.sendotp_login_btn);
+        loginBtn = rootView.findViewById(R.id.login_login_btn);
+        loadingOTPProgressBar = rootView.findViewById(R.id.sendotp_login_progressbar);
+        otpSectionLinearLayout = rootView.findViewById(R.id.login_fragment_otp_linear_layout);
+    }
+
+    private void addListeners(View rootView){
+
+        phoneEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == 10){
+                    sendOTPBtn.setEnabled(true);
+                }
+                else{
+                    sendOTPBtn.setEnabled(false);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        sendOTPBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!phoneEditText.getText().toString().isEmpty() && phoneEditText.getText().toString().length() == 10){
+                    String completePhoneNumber =  countryCodePicker.getSelectedCountryCodeWithPlus()+phoneEditText.getText().toString();
+                    Log.d("TAG","OnClick: Phone No -> "+completePhoneNumber);
+                    loadingOTPProgressBar.setVisibility(View.VISIBLE);
+                    sendOTPBtn.setVisibility(View.GONE);
+                    requestOTP(completePhoneNumber);
+                }
+                else{
+                    Toast.makeText(getContext(), R.string.EnterValidPhoneNumber, Toast.LENGTH_LONG);
+                }
+            }
+        });
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String otpEntered = otpEditText.getText().toString();
+                if(!otpEntered.isEmpty() && otpEntered.length() == 6){
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otpEntered);
+                    verifyAuth(credential);
+                }
+                else{
+                    Toast.makeText(getContext(), R.string.EnterTheOTP, Toast.LENGTH_LONG);
                 }
             }
         });

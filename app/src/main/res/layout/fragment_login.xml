@@ -53,9 +53,10 @@
                     android:textColor="@color/white"
                     android:layout_margin="10dp"
                     android:layout_centerInParent="true"
-                    android:background="@color/buttonCommonColor"
+                    android:background="@drawable/ripple_btn2_background"
                     android:minHeight="0dp" android:minWidth="0dp"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:enabled="false"/>
                 <ProgressBar
                     android:id="@+id/sendotp_login_progressbar"
                     android:layout_width="wrap_content"
@@ -65,10 +66,13 @@
 
             </RelativeLayout>
             <LinearLayout
+                android:id="@+id/login_fragment_otp_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -86,11 +90,11 @@
                     android:letterSpacing="0.1"
                     android:textSize="25dp"
                     android:textColor="@color/white"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#4a5a71"></LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#4a5a71"></LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -108,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginBottom="50dp"
-            android:background="@color/buttonCommonColor"
+            android:background="@drawable/ripple_btn2_background"
             android:enabled="false"
             android:gravity="center"
             android:padding="16dp"
