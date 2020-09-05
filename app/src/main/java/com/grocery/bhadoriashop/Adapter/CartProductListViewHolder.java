@@ -24,9 +24,8 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
     View mView;
     String CartItemDBKey;
     OnCustomDeleteCartItemListener mCartItemListener;
-    EditText updatedCartItemCountEditText;
     LinearLayout cartEditableLinearLayout, cartEditedLinearLayout;
-    TextView productQuantityTextView;
+    TextView productQuantityTextView, updatedCartItemCountTextView;
     int currentCartItemValue = 1;
 
     DatabaseReference mDatabaseCart = FirebaseDatabase.getInstance().getReference("ProductCart");
@@ -51,7 +50,7 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
         cartEditedLinearLayout = mView.findViewById(R.id.cart_edited_linear_layout);
         ImageButton decreaseCartItemBtn = mView.findViewById(R.id.decrease_cart_product_count_imgbtn);
         ImageButton increaseCartItemBtn = mView.findViewById(R.id.increase_cart_product_count_imgbtn);
-        updatedCartItemCountEditText = mView.findViewById(R.id.cart_product_count_edittext);
+        updatedCartItemCountTextView = mView.findViewById(R.id.cart_product_count_textview);
         ImageButton saveUpdatedCartItemCountImgBtn = mView.findViewById(R.id.product_cart_edit_qty_save_imgbtn);
 
         //Add Listener on card view elements
@@ -64,6 +63,8 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
         //set data to views
         productNameTextView.setText(ProductName);
         productQuantityTextView.setText("Qty:"+ProductCount);
+        updatedCartItemCountTextView.setText(String.valueOf(ProductCount));
+        currentCartItemValue = ProductCount;
         productPriceWeightTextView.setText("Rs. "+SellingPricePerUnit+" / "+ItemWeight+""+ItemWeightIn);
         if(ProductImageURL!=null && !ProductImageURL.isEmpty())
             Picasso.get().load(ProductImageURL).into(productImageView);
@@ -92,14 +93,14 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
             {
                 if(currentCartItemValue > 1)
                     currentCartItemValue--;
-                updatedCartItemCountEditText.setText(String.valueOf(currentCartItemValue));
+                updatedCartItemCountTextView.setText(String.valueOf(currentCartItemValue));
                 break;
             }
             case R.id.increase_cart_product_count_imgbtn:
             {
                 if(currentCartItemValue < 10)
                     currentCartItemValue++;
-                updatedCartItemCountEditText.setText(String.valueOf(currentCartItemValue));
+                updatedCartItemCountTextView.setText(String.valueOf(currentCartItemValue));
                 break;
             }
             case R.id.product_cart_edit_qty_save_imgbtn:
