@@ -28,7 +28,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.grocery.bhadoriashop.AdminTabbedActivity;
+import com.grocery.bhadoriashop.MainActivity;
 import com.grocery.bhadoriashop.R;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
@@ -44,6 +50,8 @@ public class LoginFragment extends Fragment {
     PhoneAuthProvider.ForceResendingToken forceToken;
     LinearLayout otpSectionLinearLayout;
     PhoneAuthCredential phoneAuthCredentialGlobal;
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference mRefUser;
 
     @Nullable
     @Override
@@ -105,13 +113,37 @@ public class LoginFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    //Remove login menu item from navigation drawer and add logout menu item
                     NavigationView navigationView = getActivity().findViewById(R.id.navigationView);
                     navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
                     navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
+
                     Log.d("TAG","Reached to verify auth Success");
-                    Intent intent = getActivity().getIntent();
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    //Create user if it is not there in DB
+                    mRefUser.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                //Refresh activity on successful login and open Home Fragment
+                                Intent intent = getActivity().getIntent();
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("StartWithFragment", new MainActivity().FRAGMENT_HOME);
+                                startActivity(intent);
+                            }
+                            else{
+                                //Refresh activity on successful login and open update profile fragment
+                                Intent intent = getActivity().getIntent();
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("StartWithFragment", new MainActivity().FRAGMENT_UPDATE);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
                 else {
                     Log.d("TAG","Reached to verify auth Failure");
@@ -123,6 +155,8 @@ public class LoginFragment extends Fragment {
     private void initView(View rootView){
         //Initializing objects
         firebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mRefUser = mFirebaseDatabase.getReference("Users");
         phoneEditText = rootView.findViewById(R.id.phone_login_edittext);
         otpEditText = rootView.findViewById(R.id.otp_login_edittext);
         countryCodePicker = rootView.findViewById(R.id.country_code_picker);

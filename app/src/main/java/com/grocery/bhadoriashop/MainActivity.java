@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRefCart;
+    public final int FRAGMENT_HOME = 1, FRAGMENT_B = 2, FRAGMENT_LOGIN = 3, FRAGMENT_UPDATE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
 
-        //load default fragment
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.container_fragment, new HomeFragment());
-        fragmentTransaction.commit();
+        // Open default fragment based on intent extra value
+        if(getIntent().getExtras() != null){
+            int intentFragment = getIntent().getExtras().getInt("StartWithFragment");
+            switch (intentFragment){
+                case FRAGMENT_HOME:{
+                    fragmentManager = getSupportFragmentManager();
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.add(R.id.container_fragment, new HomeFragment());
+                    fragmentTransaction.commit();
+                    break;
+                }
+                case FRAGMENT_B:{
+                    break;
+                }
+                case FRAGMENT_UPDATE:{
+                    fragmentManager = getSupportFragmentManager();
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.add(R.id.container_fragment, new ProfileFragment());
+                    fragmentTransaction.commit();
+                    break;
+                }
+                case FRAGMENT_LOGIN:{
+                    break;
+                }
+            }
+        }
+        else{
+            //load default fragment
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container_fragment, new HomeFragment());
+            fragmentTransaction.commit();
+        }
 
         //Show/hide the login/logout menu item from navigation drawer
         logOutMenuItem = navigationView.getMenu().findItem(R.id.logout_menu);
@@ -170,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.logout_menu :
                 FirebaseAuth.getInstance().signOut();
                 invalidateOptionsMenu();
+                Intent intent = getIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 break;
 
             default:
