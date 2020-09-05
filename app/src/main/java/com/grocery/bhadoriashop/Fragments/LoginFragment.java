@@ -62,8 +62,6 @@ public class LoginFragment extends Fragment {
                 verificationId = s;
                 forceToken = forceResendingToken;
                 Log.d("TAG","Request is sent to firebase");
-                //Enable the Login button once code is sent for otp to firebase
-                loginBtn.setEnabled(true);
                 loadingOTPProgressBar.setVisibility(View.GONE);
                 otpSectionLinearLayout.setVisibility(View.VISIBLE);
             }
@@ -111,7 +109,7 @@ public class LoginFragment extends Fragment {
                     navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
                     navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
                     Log.d("TAG","Reached to verify auth Success");
-                    Intent intent = new Intent(getActivity(), AdminTabbedActivity.class);
+                    Intent intent = getActivity().getIntent();
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
@@ -144,6 +142,22 @@ public class LoginFragment extends Fragment {
                 }
                 else{
                     sendOTPBtn.setEnabled(false);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        otpEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == 6){
+                    loginBtn.setEnabled(true);
+                }
+                else{
+                    loginBtn.setEnabled(false);
                 }
             }
             @Override

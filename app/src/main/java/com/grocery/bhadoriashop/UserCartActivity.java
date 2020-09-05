@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,7 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
     TextView totalAmountTextView, totalPayableAmountTextView, deliveryAmountTextView;
     double totalCartAmount = 0;
     Context currentActivityCtx;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,10 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         //Need to change hardcoded UserID with logged in userID
-        mRef = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
+        if(firebaseAuth.getCurrentUser()!=null)
+            mRef = mFirebaseDatabase.getReference("ProductCart").child(firebaseAuth.getCurrentUser().getUid());
     }
 
     @Override

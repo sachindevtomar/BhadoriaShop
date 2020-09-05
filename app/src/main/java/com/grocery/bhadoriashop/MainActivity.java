@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-    MenuItem logOutMenuItem, loginMenuItem;
+    MenuItem logOutMenuItem, loginMenuItem, updateProfileMenuItem;
     TextView menuCartCountTextView;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase mFirebaseDatabase;
@@ -76,10 +76,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Show/hide the login/logout menu item from navigation drawer
         logOutMenuItem = navigationView.getMenu().findItem(R.id.logout_menu);
         loginMenuItem = navigationView.getMenu().findItem(R.id.login_menu);
+        updateProfileMenuItem = navigationView.getMenu().findItem(R.id.update_profile_menu);
 
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRefCart = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
+        mRefCart = mFirebaseDatabase.getReference("ProductCart");
     }
 
     @Override
@@ -87,35 +88,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(FirebaseAuth.getInstance().getCurrentUser()!= null) {
             //User is logged in
-            navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
-            navigationView.getMenu().findItem(R.id.update_profile_menu).setVisible(true);
-            navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
+            loginMenuItem.setVisible(false);
+            updateProfileMenuItem.setVisible(true);
+            logOutMenuItem.setVisible(true);
         }
         else {
             //user is not logged in
-            navigationView.getMenu().findItem(R.id.login_menu).setVisible(true);
-            navigationView.getMenu().findItem(R.id.update_profile_menu).setVisible(false);
-            navigationView.getMenu().findItem(R.id.logout_menu).setVisible(false);
+            loginMenuItem.setVisible(true);
+            updateProfileMenuItem.setVisible(false);
+            logOutMenuItem.setVisible(false);
         }
-        invalidateOptionsMenu();
 
         getMenuInflater().inflate(R.menu.user_main_menu, menu);
         //get cart icon with number of items in the cart
         RelativeLayout customCartWithCountLayout = (RelativeLayout) menu.findItem(R.id.product_cart_menu_item).getActionView();
         menuCartCountTextView = (TextView) customCartWithCountLayout.findViewById(R.id.menu_item_cart_count_textview);
-        mRefCart.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+        if(firebaseAuth.getCurrentUser()!=null) {
+            mRefCart.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
 
         //add listener on the cart icon
         customCartWithCountLayout.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
-
         return true;
     }
 

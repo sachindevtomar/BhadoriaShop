@@ -66,7 +66,7 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference("Products");
-        mRefCart = mFirebaseDatabase.getReference("ProductCart").child("oCp0hwMIhUhUmVHyYnurEFLm03q2");
+        mRefCart = mFirebaseDatabase.getReference("ProductCart");
     }
 
     // create an action bar button
@@ -90,33 +90,35 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         //get cart icon with number of items in the cart
         RelativeLayout customCartWithCountLayout = (RelativeLayout) menu.findItem(R.id.product_cart_menu_item).getActionView();
         menuCartCountTextView = (TextView) customCartWithCountLayout.findViewById(R.id.menu_item_cart_count_textview);
-        mRefCart.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+        if(firebaseAuth.getCurrentUser() != null){
+            mRefCart.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-
-        //add listener on the cart icon
-        customCartWithCountLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(firebaseAuth.getCurrentUser() != null && !menuCartCountTextView.getText().toString().isEmpty() && !menuCartCountTextView.getText().toString().equals("0")) {
-                    Intent i = new Intent(getApplicationContext(), UserCartActivity.class);
-                    startActivity(i);
                 }
-                else{
-                    Toasty.error(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG, true).show();
+            });
+
+            //add listener on the cart icon
+            customCartWithCountLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(firebaseAuth.getCurrentUser() != null && !menuCartCountTextView.getText().toString().isEmpty() && !menuCartCountTextView.getText().toString().equals("0")) {
+                        Intent i = new Intent(getApplicationContext(), UserCartActivity.class);
+                        startActivity(i);
+                    }
+                    else{
+                        Toasty.error(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG, true).show();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         //find the search menu item
         MenuItem searchMenuItem = menu.findItem(R.id.product_search_menu_item);
