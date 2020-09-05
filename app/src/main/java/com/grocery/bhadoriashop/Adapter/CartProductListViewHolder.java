@@ -3,8 +3,10 @@ package com.grocery.bhadoriashop.Adapter;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,10 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
     View mView;
     String CartItemDBKey;
     OnCustomDeleteCartItemListener mCartItemListener;
+    EditText updatedCartItemCountEditText;
+    LinearLayout cartEditableLinearLayout, cartEditedLinearLayout;
+    TextView productQuantityTextView;
+    int currentCartItemValue = 1;
 
     DatabaseReference mDatabaseCart = FirebaseDatabase.getInstance().getReference("ProductCart");
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -37,12 +43,24 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
         //Views
         TextView productNameTextView = mView.findViewById(R.id.product_cart_name_textview);
         ImageView productImageView = mView.findViewById(R.id.product_cart_imageview);
-        TextView productQuantityTextView = mView.findViewById(R.id.product_cart_quantity_textview);
+        productQuantityTextView = mView.findViewById(R.id.product_cart_quantity_textview);
         TextView productPriceWeightTextView = mView.findViewById(R.id.product_cart_price_weight_textview);
         ImageButton editCartProductImageBtn = mView.findViewById(R.id.product_cart_edit_qty_imgbtn);
         ImageButton deleteCartProductImageBtn = mView.findViewById(R.id.product_cart_delete_imgbtn);
+        cartEditableLinearLayout = mView.findViewById(R.id.cart_editable_linear_layout);
+        cartEditedLinearLayout = mView.findViewById(R.id.cart_edited_linear_layout);
+        ImageButton decreaseCartItemBtn = mView.findViewById(R.id.decrease_cart_product_count_imgbtn);
+        ImageButton increaseCartItemBtn = mView.findViewById(R.id.increase_cart_product_count_imgbtn);
+        updatedCartItemCountEditText = mView.findViewById(R.id.cart_product_count_edittext);
+        ImageButton saveUpdatedCartItemCountImgBtn = mView.findViewById(R.id.product_cart_edit_qty_save_imgbtn);
+
         //Add Listener on card view elements
         deleteCartProductImageBtn.setOnClickListener(this);
+        editCartProductImageBtn.setOnClickListener(this);
+        saveUpdatedCartItemCountImgBtn.setOnClickListener(this);
+        decreaseCartItemBtn.setOnClickListener(this);
+        increaseCartItemBtn.setOnClickListener(this);
+
         //set data to views
         productNameTextView.setText(ProductName);
         productQuantityTextView.setText("Qty:"+ProductCount);
@@ -62,6 +80,44 @@ public class CartProductListViewHolder extends RecyclerView.ViewHolder implement
                 mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).child(this.CartItemDBKey).removeValue();
                 //this listener notify the parent activity about the change
                 mCartItemListener.onCartItemDeleted();
+                break;
+            }
+            case R.id.product_cart_edit_qty_imgbtn:
+            {
+                cartEditedLinearLayout.setVisibility(View.GONE);
+                cartEditableLinearLayout.setVisibility(View.VISIBLE);
+                break;
+            }
+            case R.id.decrease_cart_product_count_imgbtn:
+            {
+                if(currentCartItemValue > 1)
+                    currentCartItemValue--;
+                updatedCartItemCountEditText.setText(String.valueOf(currentCartItemValue));
+                break;
+            }
+            case R.id.increase_cart_product_count_imgbtn:
+            {
+                if(currentCartItemValue < 10)
+                    currentCartItemValue++;
+                updatedCartItemCountEditText.setText(String.valueOf(currentCartItemValue));
+                break;
+            }
+            case R.id.product_cart_edit_qty_save_imgbtn:
+            {
+                try {
+                    mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).child(this.CartItemDBKey).child("itemCount").setValue(currentCartItemValue);
+                    //Revert back the layout visibility
+                    cartEditedLinearLayout.setVisibility(View.VISIBLE);
+                    cartEditableLinearLayout.setVisibility(View.GONE);
+                    productQuantityTextView.setText("Qty: "+currentCartItemValue);
+                    //Callback to update the activity UI with the updated cart quantity values
+                    mCartItemListener.onCartItemDeleted();
+                }
+                catch(Exception ex){
+                    //If there is any error occured at the time of updating values in the firebase realtime database
+                    Log.d("Update Error", "Error occured while updating cart item count in the realtime database");
+                }
+                break;
             }
         }
     }
