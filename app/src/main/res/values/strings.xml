@@ -25,6 +25,7 @@
     <string name="mobile_number_cannot_update">Mobile Number can\'t be updated</string>
     <string name="enter_valid_pincode">Please enter valid Pincode</string>
     <string name="enter_valid_email">Please enter valid email address</string>
+    <string name="entered_wrong_otp">Entered OTP is wrong. Please try again</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>

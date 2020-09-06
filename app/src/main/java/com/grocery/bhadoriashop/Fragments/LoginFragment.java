@@ -40,6 +40,8 @@ import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
 import java.util.concurrent.TimeUnit;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoginFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     EditText phoneEditText, otpEditText;
@@ -98,7 +100,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-                Toast.makeText(getContext(), "Can not create account : "+ e.getMessage(), Toast.LENGTH_LONG).show();
+                Toasty.error(getActivity(), "Can not create account : "+ e.getMessage(), Toast.LENGTH_LONG, true).show();
                 sendOTPBtn.setVisibility(View.VISIBLE);
                 loadingOTPProgressBar.setVisibility(View.GONE);
             }
@@ -146,7 +148,7 @@ public class LoginFragment extends Fragment {
                     });
                 }
                 else {
-                    Log.d("TAG","Reached to verify auth Failure");
+                    Toasty.error(getActivity(), R.string.entered_wrong_otp, Toast.LENGTH_LONG, true).show();
                 }
             }
         });

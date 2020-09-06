@@ -18,8 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.grocery.bhadoriashop.MainActivity;
 import com.grocery.bhadoriashop.Models.User;
 import com.grocery.bhadoriashop.Models.UserAddress;
@@ -38,6 +41,7 @@ public class ProfileFragment extends Fragment {
     DatabaseReference mRefUser;
     FirebaseAuth firebaseAuth;
     View completeScopeView;
+    User currentUserFromDB;
 
     @Nullable
     @Override
@@ -65,6 +69,38 @@ public class ProfileFragment extends Fragment {
 
         //Set Data
         phoneProfileEditText.setText(firebaseAuth.getCurrentUser().getPhoneNumber());
+
+        //Pre-fill the data for the User
+        preFillData();
+    }
+
+    private void preFillData() {
+        if(firebaseAuth.getCurrentUser()!=null) {
+            mRefUser.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //Add code to set values from the DB Data
+                        currentUserFromDB = snapshot.getValue(User.class);
+
+                        emailProfileEditText.setText(currentUserFromDB.getEmail());
+                        fullNameProfileEditText.setText(currentUserFromDB.getFullName());
+                        if(currentUserFromDB.isGender())
+                            genderProfileRadioGroup.check(R.id.male_gender_profile_radiobtn);
+                        else
+                            genderProfileRadioGroup.check(R.id.female_gender_profile_radiobtn);
+                        //setting value of first address
+                        addressProfileEditText.setText(currentUserFromDB.getAddresses().get(0).getAddress());
+                        addressPincodeProfileEditText.setText(currentUserFromDB.getAddresses().get(0).getPincode());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     private void addListeners(View rootView) {
@@ -86,10 +122,19 @@ public class ProfileFragment extends Fragment {
                     //prepare address list
                     ArrayList<UserAddress> addressList = new ArrayList<UserAddress>();
                     addressList.add(primaryAddress);
+                    //set created date epoch for new users only
+                    long createdDate;
+                    if(currentUserFromDB == null){
+                        createdDate = System.currentTimeMillis();
+                    }
+                    else{
+                        createdDate = currentUserFromDB.getCreatedDateEPoch();
+                    }
                     //Create final user object
                     User insertUser = new User(firebaseAuth.getCurrentUser().getUid(),
                             fullNameProfileEditText.getText().toString().trim(),
                             phoneProfileEditText.getText().toString().trim(),
+                            createdDate,
                             System.currentTimeMillis(),
                             emailProfileEditText.getText().toString().trim(),
                             ((RadioButton) completeScopeView.findViewById(genderProfileRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Male"),

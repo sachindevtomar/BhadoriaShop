@@ -11,16 +11,6 @@ public class User {
 
     public User(){}
 
-    public User(String userId, String fullName, String phoneNumber, long createdDateEPoch, String email, boolean gender, boolean isAdmin, ArrayList<UserAddress> addresses) {
-        UserId = userId;
-        FullName = fullName;
-        PhoneNumber = phoneNumber;
-        CreatedDateEPoch = createdDateEPoch;
-        Email = email;
-        Gender = gender;   //True refer male
-        IsAdmin = isAdmin;
-        Addresses = addresses;
-    }
 
     public long getCreatedDateEPoch() {
         return CreatedDateEPoch;
@@ -30,7 +20,29 @@ public class User {
         CreatedDateEPoch = createdDateEPoch;
     }
 
+    public long getUpdatedDateEPoch() {
+        return UpdatedDateEPoch;
+    }
+
+    public void setUpdatedDateEPoch(long updatedDateEPoch) {
+        UpdatedDateEPoch = updatedDateEPoch;
+    }
+
     private long CreatedDateEPoch;
+
+    public User(String userId, String fullName, String phoneNumber, long createdDateEPoch, long updatedDateEPoch, String email, boolean gender, boolean isAdmin, ArrayList<UserAddress> addresses) {
+        UserId = userId;
+        FullName = fullName;
+        PhoneNumber = phoneNumber;
+        CreatedDateEPoch = createdDateEPoch;
+        UpdatedDateEPoch = updatedDateEPoch;
+        Email = email;
+        Gender = gender;
+        IsAdmin = isAdmin;
+        Addresses = addresses;
+    }
+
+    private long UpdatedDateEPoch;
 
     public String getUserId() {
         return UserId;
