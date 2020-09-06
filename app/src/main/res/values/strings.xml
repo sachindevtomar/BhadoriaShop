@@ -22,6 +22,9 @@
     <string name="login_required">Login is required</string>
     <string name="item_added_cart">Item is Added</string>
     <string name="unable_add_item_cart">Unable to add item in the cart</string>
+    <string name="mobile_number_cannot_update">Mobile Number can\'t be updated</string>
+    <string name="enter_valid_pincode">Please enter valid Pincode</string>
+    <string name="enter_valid_email">Please enter valid email address</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>

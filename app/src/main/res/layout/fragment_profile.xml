@@ -72,7 +72,7 @@
                     android:letterSpacing="0.1"
                     android:textSize="15dp"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/white"
+                    android:textColor="@color/buttonCommonColorLight"
                     />
             </LinearLayout>
             <View
@@ -100,7 +100,7 @@
                     android:letterSpacing="0.1"
                     android:textSize="15dp"
                     android:inputType="text"
-                    android:textColor="@color/white"
+                    android:textColor="@color/buttonCommonColorLight"
                     />
             </LinearLayout>
 
@@ -125,35 +125,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:checkedButton="@id/male_gender_profile_radiobtn">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Male"
-                        android:textSize="15sp"
-                        android:textColor="@color/buttonCommonColorLight"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20dp"/>
                     <RadioButton
                         android:id="@+id/male_gender_profile_radiobtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorGrey"
-                        android:buttonTint="@color/buttonCommonColorLight"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Female"
-                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
                         android:textColor="@color/buttonCommonColorLight"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20dp"
+                        android:text="Male"
+                        android:textSize="15sp"
+                        android:buttonTint="@color/buttonCommonColorLight"
                         />
                     <RadioButton
                         android:id="@+id/female_gender_profile_radiobtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorGrey"
+                        android:textColor="@color/buttonCommonColorLight"
+                        android:text="Female"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
                         android:buttonTint="@color/buttonCommonColorLight"/>
                 </RadioGroup>
 
@@ -165,6 +154,7 @@
                 android:background="@color/buttonCommonColor"></View>
 
             <LinearLayout
+                android:id="@+id/phone_section_profile_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -185,8 +175,7 @@
                     android:letterSpacing="0.1"
                     android:textSize="15dp"
                     android:inputType="number"
-                    android:textColor="@color/white"
-                    android:enabled="false"
+                    android:textColor="@color/buttonCommonColorLight"
                     />
                 <View
                     android:layout_width="0dp"
@@ -229,7 +218,7 @@
                         android:inputType="text|textMultiLine"
                         android:letterSpacing="0.1"
                         android:textSize="15dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/buttonCommonColorLight"
                         android:layout_marginBottom="10dp"
                         />
                     <View
@@ -250,7 +239,7 @@
                         android:inputType="number"
                         android:letterSpacing="0.1"
                         android:textSize="15dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/buttonCommonColorLight"
                         />
                 </LinearLayout>
             </LinearLayout>

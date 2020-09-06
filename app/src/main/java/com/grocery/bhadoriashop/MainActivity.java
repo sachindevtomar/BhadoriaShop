@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 invalidateOptionsMenu();
                 Intent intent = getIntent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("StartWithFragment", new MainActivity().FRAGMENT_HOME);
                 startActivity(intent);
                 break;
 
