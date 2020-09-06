@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,9 @@ import com.grocery.bhadoriashop.Models.User;
 import com.grocery.bhadoriashop.Models.UserAddress;
 import com.grocery.bhadoriashop.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -42,6 +45,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     View completeScopeView;
     User currentUserFromDB;
+    TextView lastUpdatedDateStatusTextView;
 
     @Nullable
     @Override
@@ -61,6 +65,7 @@ public class ProfileFragment extends Fragment {
         addressPincodeProfileEditText = rootView.findViewById(R.id.address_pincode_profile_edittext);
         genderProfileRadioGroup = rootView.findViewById(R.id.gender_profile_radiogroup);
         updateProfileBtn = rootView.findViewById(R.id.update_profile_btn);
+        lastUpdatedDateStatusTextView = rootView.findViewById(R.id.last_updated_profile_date_textview);
 
         //initialize database references
         firebaseAuth = FirebaseAuth.getInstance();
@@ -89,6 +94,9 @@ public class ProfileFragment extends Fragment {
                             genderProfileRadioGroup.check(R.id.male_gender_profile_radiobtn);
                         else
                             genderProfileRadioGroup.check(R.id.female_gender_profile_radiobtn);
+                        Date lastUpdatedDate = new Date(currentUserFromDB.getUpdatedDateEPoch());
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+                        lastUpdatedDateStatusTextView.setText("( Last Updated on: " + dateFormatter.format(lastUpdatedDate) + " )");
                         //setting value of first address
                         addressProfileEditText.setText(currentUserFromDB.getAddresses().get(0).getAddress());
                         addressPincodeProfileEditText.setText(currentUserFromDB.getAddresses().get(0).getPincode());
@@ -124,12 +132,16 @@ public class ProfileFragment extends Fragment {
                     addressList.add(primaryAddress);
                     //set created date epoch for new users only
                     long createdDate;
-                    if(currentUserFromDB == null){
+                    boolean isAdmin = false;
+                    if(currentUserFromDB == null)
                         createdDate = System.currentTimeMillis();
-                    }
-                    else{
+                    else
                         createdDate = currentUserFromDB.getCreatedDateEPoch();
-                    }
+                    //check if user is admin. if yes then keep admin flag as it is.
+                    if(currentUserFromDB.isAdmin())
+                        isAdmin = true;
+                    else
+                        isAdmin = false;
                     //Create final user object
                     User insertUser = new User(firebaseAuth.getCurrentUser().getUid(),
                             fullNameProfileEditText.getText().toString().trim(),
@@ -138,7 +150,7 @@ public class ProfileFragment extends Fragment {
                             System.currentTimeMillis(),
                             emailProfileEditText.getText().toString().trim(),
                             ((RadioButton) completeScopeView.findViewById(genderProfileRadioGroup.getCheckedRadioButtonId())).getText().toString().equals("Male"),
-                            false,
+                            isAdmin,
                             addressList);
 
                     saveUserDataIntoDB(insertUser);

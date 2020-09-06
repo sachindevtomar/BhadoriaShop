@@ -73,6 +73,7 @@
                     android:textSize="15dp"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/buttonCommonColorLight"
+                    android:layout_gravity="center_vertical"
                     />
             </LinearLayout>
             <View
@@ -101,6 +102,7 @@
                     android:textSize="15dp"
                     android:inputType="text"
                     android:textColor="@color/buttonCommonColorLight"
+                    android:layout_gravity="center_vertical"
                     />
             </LinearLayout>
 
@@ -176,6 +178,7 @@
                     android:textSize="15dp"
                     android:inputType="number"
                     android:textColor="@color/buttonCommonColorLight"
+                    android:layout_gravity="center_vertical"
                     />
                 <View
                     android:layout_width="0dp"
@@ -265,4 +268,16 @@
             android:textColor="@color/white"
             android:textStyle="bold"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/last_updated_profile_date_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/update_profile_btn_section_linear_layout"
+        android:textColor="@color/buttonCommonColorLight"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:text="( Welcome on your profile page )"/>
 </RelativeLayout>

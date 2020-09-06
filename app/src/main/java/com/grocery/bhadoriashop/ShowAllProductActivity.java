@@ -127,15 +127,15 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //firebaseSearch(query);
+                //will add code here;
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Filter as you type
-                //firebaseSearch(newText);
-                Log.d("searchquery","testing");
+                //Temporary solution to manage product category filter
+                currentSelectedCategoryFilter = "";
+                filterProductsBasedOnSearchText(newText);
                 return false;
             }
         });
@@ -167,6 +167,26 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
                             .setQuery(mRef, AdminProductList.class)
                             .build();
         }
+        filterProducts(options);
+    }
+
+    private void filterProductsBasedOnSearchText(String query){
+        if(query != null && query.length()>0){
+            char[] letters=query.toCharArray();
+            String firstLetter = String.valueOf(letters[0]).toUpperCase();
+            String remainingLetters = query.substring(1);
+            query=firstLetter+remainingLetters;
+        }
+
+        Query firebaseSearchQuery = mRef.orderByChild("ProductName").startAt(query).endAt(query + "\uf8ff");
+        FirebaseRecyclerOptions<AdminProductList> options =
+                new FirebaseRecyclerOptions.Builder<AdminProductList>()
+                        .setQuery(firebaseSearchQuery, AdminProductList.class)
+                        .build();
+        filterProducts(options);
+    }
+
+    private void filterProducts(FirebaseRecyclerOptions<AdminProductList> options){
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AdminProductList, UserProductListViewHolder>(options) {
             @Override
             public UserProductListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
