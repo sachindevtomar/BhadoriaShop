@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView menuCartCountTextView;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase mFirebaseDatabase;
-    DatabaseReference mRefCart;
+    DatabaseReference mRefCart, mRefUser;
     public final int FRAGMENT_HOME = 1, FRAGMENT_B = 2, FRAGMENT_LOGIN = 3, FRAGMENT_UPDATE = 4;
 
     @Override
@@ -107,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginMenuItem = navigationView.getMenu().findItem(R.id.login_menu);
         updateProfileMenuItem = navigationView.getMenu().findItem(R.id.update_profile_menu);
 
-        //send Query to FirebaseDatabase
+        //set FirebaseDatabase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRefCart = mFirebaseDatabase.getReference("ProductCart");
+        mRefUser = mFirebaseDatabase.getReference("Users");
     }
 
     @Override
@@ -126,6 +127,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loginMenuItem.setVisible(true);
             updateProfileMenuItem.setVisible(false);
             logOutMenuItem.setVisible(false);
+        }
+
+        //get Admin gate button only if any admin logs in
+        if(firebaseAuth.getCurrentUser()!=null) {
+            mRefUser.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //Add code to show admin button in navigation drawer
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         getMenuInflater().inflate(R.menu.user_main_menu, menu);

@@ -29,6 +29,17 @@
         app:headerLayout="@layout/drawer_header"
         android:layout_gravity = "start"
         android:fitsSystemWindows="true">
+        <Button
+            android:id="@+id/admin_gate_navigation_drawer_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/ripple_btn_background"
+            android:layout_margin="20dp"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:text="Admin Gate"
+            android:visibility="gone"/>
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
