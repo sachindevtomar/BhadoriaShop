@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import com.grocery.bhadoriashop.Fragments.LoginFragment;
 import com.grocery.bhadoriashop.Fragments.RefundPolicyFragment;
 import com.grocery.bhadoriashop.Fragments.ProfileFragment;
 import com.grocery.bhadoriashop.Helper.SelectCategoryDialog;
+import com.grocery.bhadoriashop.Models.User;
 
 import es.dmoral.toasty.Toasty;
 
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRefCart, mRefUser;
     public final int FRAGMENT_HOME = 1, FRAGMENT_B = 2, FRAGMENT_LOGIN = 3, FRAGMENT_UPDATE = 4;
+    User currentUserFromDB;
+    Button adminGateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +110,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         logOutMenuItem = navigationView.getMenu().findItem(R.id.logout_menu);
         loginMenuItem = navigationView.getMenu().findItem(R.id.login_menu);
         updateProfileMenuItem = navigationView.getMenu().findItem(R.id.update_profile_menu);
-
+        adminGateBtn = navigationView.findViewById(R.id.admin_gate_navigation_drawer_btn);
         //set FirebaseDatabase references
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRefCart = mFirebaseDatabase.getReference("ProductCart");
         mRefUser = mFirebaseDatabase.getReference("Users");
+
+        addListeners();
     }
 
     @Override
@@ -136,6 +142,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         //Add code to show admin button in navigation drawer
+                        currentUserFromDB = snapshot.getValue(User.class);
+                        if(currentUserFromDB.isAdmin())
+                            adminGateBtn.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -228,5 +237,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         return true;
+    }
+
+    private void addListeners(){
+        adminGateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AdminTabbedActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

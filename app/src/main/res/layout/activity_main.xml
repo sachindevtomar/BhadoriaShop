@@ -39,7 +39,9 @@
             android:textSize="16dp"
             android:textColor="@color/white"
             android:text="Admin Gate"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:paddingLeft="15dp"
+            android:drawableStart="@drawable/ic_star_gold_24dp"/>
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

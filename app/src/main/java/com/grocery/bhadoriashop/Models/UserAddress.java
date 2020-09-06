@@ -7,6 +7,8 @@ public class UserAddress{
         IsPrimary = isPrimary;
     }
 
+    public UserAddress(){}
+
     String Address;
     String Pincode;
 

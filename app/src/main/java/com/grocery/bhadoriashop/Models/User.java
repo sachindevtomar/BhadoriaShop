@@ -9,6 +9,8 @@ public class User {
     private String FullName;
     private String PhoneNumber;
 
+    public User(){}
+
     public User(String userId, String fullName, String phoneNumber, long createdDateEPoch, String email, boolean gender, boolean isAdmin, ArrayList<UserAddress> addresses) {
         UserId = userId;
         FullName = fullName;
