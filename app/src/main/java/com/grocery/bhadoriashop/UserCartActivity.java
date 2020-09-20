@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -27,16 +29,27 @@ import com.grocery.bhadoriashop.Adapter.CartProductListViewHolder;
 import com.grocery.bhadoriashop.Adapter.UserProductListViewHolder;
 import com.grocery.bhadoriashop.Models.AdminProductList;
 import com.grocery.bhadoriashop.Models.CartProduct;
+import com.grocery.bhadoriashop.Models.Order;
+import com.grocery.bhadoriashop.Models.OrderStatus;
+import com.grocery.bhadoriashop.Models.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class UserCartActivity extends AppCompatActivity implements OnCustomDeleteCartItemListener{
     private RecyclerView recyclerView;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     FirebaseDatabase mFirebaseDatabase;
-    DatabaseReference mRef;
+    DatabaseReference mRefProductCart, mRefUser, mRefOrder;
     TextView totalAmountTextView, totalPayableAmountTextView, deliveryAmountTextView;
     double totalCartAmount = 0;
     Context currentActivityCtx;
     FirebaseAuth firebaseAuth;
+    Button checkoutProductsBtn;
+    List<CartProduct> currentCartProducts = new ArrayList<CartProduct>();
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +65,64 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
         deliveryAmountTextView = (TextView) findViewById(R.id.delivery_cart_amount_textview);
         recyclerView = (RecyclerView) findViewById(R.id.cart_product_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        checkoutProductsBtn = (Button) findViewById(R.id.checkout_products_btn);
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         //Need to change hardcoded UserID with logged in userID
-        if(firebaseAuth.getCurrentUser()!=null)
-            mRef = mFirebaseDatabase.getReference("ProductCart").child(firebaseAuth.getCurrentUser().getUid());
+        if(firebaseAuth.getCurrentUser()!=null) {
+            mRefProductCart = mFirebaseDatabase.getReference("ProductCart").child(firebaseAuth.getCurrentUser().getUid());
+            mRefUser = mFirebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
+            mRefOrder = mFirebaseDatabase.getReference("Orders");
+        }
+
+        //addListeners
+        addListenersCustomMethod();
+    }
+
+    private void addListenersCustomMethod() {
+        mRefUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    currentUser = snapshot.getValue(User.class);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        checkoutProductsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Order orderToBePlaced = formOrderObject();
+                if(orderToBePlaced != null && orderToBePlaced.getCreatedBy() !=null && orderToBePlaced.getProducts() != null && !orderToBePlaced.getCreatedBy().getAddresses().isEmpty()){
+                    // read the index key
+                    String placedOrderId = mRefOrder.push().getKey();
+                    orderToBePlaced.setOrderId(placedOrderId);
+                    mRefOrder.child(placedOrderId).setValue(orderToBePlaced);
+                    Toasty.success(getApplicationContext(), "Congratulations, Your order has been placed", Toast.LENGTH_LONG, true).show();
+                }
+                else{
+                    Toasty.error(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_LONG, true).show();
+                }
+            }
+        });
+    }
+
+    private Order formOrderObject() {
+        Order order = new Order();
+        order.setCreatedBy(currentUser);
+        order.setProducts(currentCartProducts);
+        order.setStatus(OrderStatus.Placed);
+        order.setCreatedDateEPoch(System.currentTimeMillis());
+        //now add half an hour, 1 800 000 miliseconds = 30 minutes
+        long defaultExpectedDeliveryTime = System.currentTimeMillis() + 86400000;
+        order.setExpectedDeliveryTime(defaultExpectedDeliveryTime);
+        return order;
     }
 
     @Override
@@ -82,7 +147,7 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
         currentActivityCtx = this;
         FirebaseRecyclerOptions<CartProduct> options ;
         options = new FirebaseRecyclerOptions.Builder<CartProduct>()
-                .setQuery(mRef, CartProduct.class)
+                .setQuery(mRefProductCart, CartProduct.class)
                 .build();
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<CartProduct, CartProductListViewHolder>(options) {
             @Override
@@ -107,12 +172,14 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
     private void updateTotalAmountOnUIAfterCartModification(){
         totalCartAmount = 0;
         totalPayableAmountTextView.setText("Rs."+String.valueOf(totalCartAmount + 50)+"/-");
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mRefProductCart.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     for(DataSnapshot childDataSnapShot : snapshot.getChildren()){
                         CartProduct cartItem = childDataSnapShot.getValue(CartProduct.class);
+                        //this list will be sent at the time of checkout
+                        currentCartProducts.add(cartItem);
                         totalCartAmount += (cartItem.getProductSellingPrice()*cartItem.getItemCount());
                     }
                     //set TextViews values

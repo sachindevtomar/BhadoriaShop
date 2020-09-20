@@ -71,9 +71,3 @@ public class Order {
     }
 }
 
-enum OrderStatus {
-    Placed,
-    InProcess,
-    Completed,
-    Cancelled
-}

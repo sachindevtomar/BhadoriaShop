@@ -27,6 +27,7 @@
     <string name="enter_valid_email">Please enter valid email address</string>
     <string name="entered_wrong_otp">Entered OTP is wrong. Please try again</string>
     <string name="update_profile">Please update your profile</string>
+    <string name="something_went_wrong">Something went wrong</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>

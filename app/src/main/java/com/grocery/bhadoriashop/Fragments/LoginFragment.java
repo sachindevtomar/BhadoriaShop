@@ -109,7 +109,6 @@ public class LoginFragment extends Fragment {
 
 
     private void verifyAuth(PhoneAuthCredential credential) {
-        Log.d("TAG","Reached to verify auth");
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
             @Override
@@ -120,7 +119,6 @@ public class LoginFragment extends Fragment {
                     navigationView.getMenu().findItem(R.id.logout_menu).setVisible(true);
                     navigationView.getMenu().findItem(R.id.login_menu).setVisible(false);
 
-                    Log.d("TAG","Reached to verify auth Success");
                     //Create user if it is not there in DB
                     mRefUser.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
