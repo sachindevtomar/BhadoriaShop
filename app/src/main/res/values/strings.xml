@@ -29,6 +29,8 @@
     <string name="update_profile">Please update your profile</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="empty_cart">Cart is empty</string>
+    <string name="item_updated_cart">Item is updated in cart</string>
+    <string name="item_already_cart">Item already available in cart</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>

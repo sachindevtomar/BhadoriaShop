@@ -11,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.grocery.bhadoriashop.Models.CartProduct;
 import com.grocery.bhadoriashop.R;
 import com.squareup.picasso.Picasso;
@@ -103,9 +107,53 @@ public class UserProductListViewHolder extends RecyclerView.ViewHolder implement
                     break;
                 }
                 try {
-                    CartProduct saveCartItem = new CartProduct(this.ProductName, this.ItemWeight, this.ItemWeightIn, this.ObjectKey, currentCartItemCount, System.currentTimeMillis(), this.ProductImageURL, this.ProductSellingPrice);
-                    mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).push().setValue(saveCartItem);
-                    Toasty.success(this.ctx, R.string.item_added_cart, Toast.LENGTH_LONG, true).show();
+                    Log.d("ObjectId",this.ObjectKey);
+                    mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                boolean itemFoundInCart = false;
+                                CartProduct existingCartProduct = null;
+                                String itemFoundIndexKey = null;
+                                //Check if item is already there in cart or not
+                                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                    existingCartProduct = dataSnapshot.getValue(CartProduct.class);
+                                    if(existingCartProduct.getProductObjectKey().equals(ObjectKey)){
+                                        itemFoundInCart = true;
+                                        itemFoundIndexKey = dataSnapshot.getKey();
+                                        break;
+                                    }
+                                }
+                                //Update or show info if item is found
+                                if(itemFoundInCart && existingCartProduct != null){
+                                    if(existingCartProduct.getItemCount() != currentCartItemCount) {
+                                        existingCartProduct.setItemCount(currentCartItemCount);
+                                        mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).child(itemFoundIndexKey).setValue(existingCartProduct);
+                                        Toasty.success(ctx, R.string.item_updated_cart, Toast.LENGTH_SHORT, true).show();
+                                    }
+                                    else{
+                                        Toasty.info(ctx, R.string.item_already_cart, Toast.LENGTH_SHORT, true).show();
+                                    }
+                                }
+                                //insert new item in cart if it was not there earlier
+                                else{
+                                    CartProduct saveCartItem = new CartProduct(ProductName, ItemWeight, ItemWeightIn, ObjectKey, currentCartItemCount, System.currentTimeMillis(), ProductImageURL, ProductSellingPrice);
+                                    mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).push().setValue(saveCartItem);
+                                    Toasty.success(ctx, R.string.item_added_cart, Toast.LENGTH_SHORT, true).show();
+                                }
+                            }
+                            else{
+                                CartProduct saveCartItem = new CartProduct(ProductName, ItemWeight, ItemWeightIn, ObjectKey, currentCartItemCount, System.currentTimeMillis(), ProductImageURL, ProductSellingPrice);
+                                mDatabaseCart.child(firebaseAuth.getCurrentUser().getUid()).push().setValue(saveCartItem);
+                                Toasty.success(ctx, R.string.item_added_cart, Toast.LENGTH_SHORT, true).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
                 catch (Exception ex){
                     Toasty.error(this.ctx, R.string.unable_add_item_cart, Toast.LENGTH_LONG, true).show();
