@@ -94,8 +94,11 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
             mRefCart.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         menuCartCountTextView.setText(String.valueOf(snapshot.getChildrenCount()));
+                    }
+                    else{
+                        menuCartCountTextView.setText("0");
                     }
                 }
 
@@ -112,6 +115,9 @@ public class ShowAllProductActivity extends AppCompatActivity implements SelectC
                     if(firebaseAuth.getCurrentUser() != null && !menuCartCountTextView.getText().toString().isEmpty() && !menuCartCountTextView.getText().toString().equals("0")) {
                         Intent i = new Intent(getApplicationContext(), UserCartActivity.class);
                         startActivity(i);
+                    }
+                    else if(menuCartCountTextView.getText().toString().equals("0")){
+                        Toasty.info(getApplicationContext(), R.string.empty_cart, Toast.LENGTH_LONG, true).show();
                     }
                     else{
                         Toasty.error(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG, true).show();

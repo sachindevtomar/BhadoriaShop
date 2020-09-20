@@ -28,6 +28,7 @@
     <string name="entered_wrong_otp">Entered OTP is wrong. Please try again</string>
     <string name="update_profile">Please update your profile</string>
     <string name="something_went_wrong">Something went wrong</string>
+    <string name="empty_cart">Cart is empty</string>
 
     <string-array name="weight_category_array">
         <item>Kgs</item>
