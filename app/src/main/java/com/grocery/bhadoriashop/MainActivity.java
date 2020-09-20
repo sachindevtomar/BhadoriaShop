@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             adminGateBtn.setVisibility(View.VISIBLE);
                     }
                     else{
-                        userNameDrawer.setText("Please update your profile");
+                        userNameDrawer.setText(R.string.update_profile);
                         userEmailDrawer.setVisibility(View.GONE);
                     }
                 }
