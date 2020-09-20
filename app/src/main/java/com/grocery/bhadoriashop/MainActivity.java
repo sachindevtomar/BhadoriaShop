@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     MenuItem logOutMenuItem, loginMenuItem, updateProfileMenuItem;
-    TextView menuCartCountTextView;
+    TextView menuCartCountTextView, userNameDrawer, userEmailDrawer;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mRefCart, mRefUser;
@@ -63,9 +64,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.drawer_toolbar);
         setSupportActionBar(toolbar);
 
+        //set FirebaseDatabase references
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mRefCart = mFirebaseDatabase.getReference("ProductCart");
+        mRefUser = mFirebaseDatabase.getReference("Users");
+
         drawerLayout = findViewById(R.id.drawer);
-        navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
+        //Navigation Drawer Header method
+        navigationDrawerHeaderModification();
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -111,12 +117,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginMenuItem = navigationView.getMenu().findItem(R.id.login_menu);
         updateProfileMenuItem = navigationView.getMenu().findItem(R.id.update_profile_menu);
         adminGateBtn = navigationView.findViewById(R.id.admin_gate_navigation_drawer_btn);
-        //set FirebaseDatabase references
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRefCart = mFirebaseDatabase.getReference("ProductCart");
-        mRefUser = mFirebaseDatabase.getReference("Users");
 
         addListeners();
+    }
+
+    private void navigationDrawerHeaderModification() {
+
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        LinearLayout loggedInUserLinearLayout = (LinearLayout) headerView.findViewById(R.id.logged_in_drawer_linearlayout);
+        LinearLayout loggedOutUserLinearLayout = (LinearLayout) headerView.findViewById(R.id.logged_out_drawer_linearlayout);
+        userNameDrawer = (TextView) headerView.findViewById(R.id.drawer_user_name_textview);
+        userEmailDrawer = (TextView) headerView.findViewById(R.id.drawer_user_email_textview);
+
+        if(firebaseAuth.getCurrentUser() != null){
+            loggedInUserLinearLayout.setVisibility(View.VISIBLE);
+            loggedOutUserLinearLayout.setVisibility(View.GONE);
+            mRefUser.child(firebaseAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //Add code to show admin button in navigation drawer
+                        currentUserFromDB = snapshot.getValue(User.class);
+                        userNameDrawer.setText(currentUserFromDB.getFullName());
+                        userEmailDrawer.setText(currentUserFromDB.getEmail());
+                        if(currentUserFromDB.isAdmin())
+                            adminGateBtn.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        userNameDrawer.setText("Please update your profile");
+                        userEmailDrawer.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            loggedInUserLinearLayout.setVisibility(View.GONE);
+            loggedOutUserLinearLayout.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
