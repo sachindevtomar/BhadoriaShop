@@ -131,5 +131,15 @@
             android:textSize="14dp"
             android:textColor="@color/white"
             android:drawableEnd="@drawable/ic_arrow_forward_white_24dp"/>
+
+        <ProgressBar
+            android:id="@+id/checkout_progress_bar"
+            android:layout_marginTop="15dp"
+            android:layout_centerInParent="true"
+            android:layout_below="@+id/price_calculation_linearlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 </ScrollView>

@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
     Button checkoutProductsBtn;
     List<CartProduct> currentCartProducts = new ArrayList<CartProduct>();
     User currentUser;
+    ProgressBar checkoutProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
         recyclerView = (RecyclerView) findViewById(R.id.cart_product_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         checkoutProductsBtn = (Button) findViewById(R.id.checkout_products_btn);
+        checkoutProgressBar = (ProgressBar) findViewById(R.id.checkout_progress_bar);
         //send Query to FirebaseDatabase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -98,16 +102,30 @@ public class UserCartActivity extends AppCompatActivity implements OnCustomDelet
         checkoutProductsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkoutProgressBar.setVisibility(View.VISIBLE);
+                checkoutProductsBtn.setVisibility(View.GONE);
                 Order orderToBePlaced = formOrderObject();
+
                 if(orderToBePlaced != null && orderToBePlaced.getCreatedBy() !=null && orderToBePlaced.getProducts() != null && !orderToBePlaced.getCreatedBy().getAddresses().isEmpty()){
                     // read the index key
                     String placedOrderId = mRefOrder.push().getKey();
                     orderToBePlaced.setOrderId(placedOrderId);
                     mRefOrder.child(placedOrderId).setValue(orderToBePlaced);
                     Toasty.success(getApplicationContext(), "Congratulations, Your order has been placed", Toast.LENGTH_LONG, true).show();
+
+                    //Remove the Cart items once order is placed
+                    mRefProductCart.removeValue();
+
+                    //Refresh activity on successful order place and open home fragment
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("StartWithFragment", new MainActivity().FRAGMENT_HOME);
+                    startActivity(intent);
                 }
                 else{
                     Toasty.error(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_LONG, true).show();
+                    checkoutProgressBar.setVisibility(View.GONE);
+                    checkoutProductsBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
